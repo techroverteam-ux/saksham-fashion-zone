@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Saksham Fashion Zone - Inauguration Website
 
 A premium saree & blouse showroom website built with Next.js featuring Indian ethnic luxury design.
@@ -64,3 +65,6 @@ npm run dev
 npm run build
 npm start
 ```
+=======
+# saksham-fashion-zone
+>>>>>>> 2876204e045995483514d337bd7c67f86f3cf502
