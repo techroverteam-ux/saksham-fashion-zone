@@ -1,0 +1,353 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+@layer base {
+  body {
+    @apply font-inter bg-ivory-white text-text-dark;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-playfair font-semibold;
+  }
+}
+
+@layer components {
+  /* Navigation Links */
+  .nav-link {
+    @apply text-text-dark font-medium transition-all duration-300 relative py-2 px-1;
+  }
+  
+  .nav-link:hover {
+    @apply text-primary-maroon transform -translate-y-0.5;
+  }
+  
+  .nav-underline {
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-maroon to-royal-gold transition-all duration-300 group-hover:w-full;
+  }
+  
+  /* Call Button */
+  .call-btn {
+    @apply bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 relative overflow-hidden hidden sm:flex items-center;
+  }
+  
+  .call-pulse {
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700;
+  }
+  
+  /* Hero Buttons */
+  .hero-btn-primary {
+    @apply bg-gradient-to-r from-royal-gold to-yellow-400 text-text-dark px-6 sm:px-10 py-3 sm:py-5 rounded-2xl font-bold text-lg sm:text-xl transition-all duration-500 shadow-2xl hover:shadow-2xl hover:scale-105 relative overflow-hidden flex items-center justify-center;
+  }
+  
+  .hero-btn-secondary {
+    @apply bg-white/10 backdrop-blur-md border-2 border-white/30 text-white px-6 sm:px-10 py-3 sm:py-5 rounded-2xl font-bold text-lg sm:text-xl transition-all duration-500 hover:bg-white/20 hover:border-white/50 hover:scale-105 relative overflow-hidden flex items-center justify-center;
+  }
+  
+  .btn-shine {
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-br from-primary-maroon to-deep-maroon text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-medium transition-all duration-500 shadow-lg hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden z-10;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 -translate-x-full transition-all duration-700;
+  }
+  
+  .btn-primary:hover::before {
+    @apply opacity-20 translate-x-full;
+  }
+  
+  .btn-gold {
+    @apply bg-gradient-to-br from-royal-gold via-yellow-400 to-accent-gold text-text-dark px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-500 shadow-gold hover:-translate-y-1 hover:shadow-2xl relative overflow-hidden z-10;
+  }
+  
+  .btn-gold::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 -translate-x-full transition-all duration-700;
+  }
+  
+  .btn-gold:hover::before {
+    @apply opacity-30 translate-x-full;
+  }
+  
+  /* Luxury Cards */
+  .card {
+    @apply bg-white rounded-2xl p-4 sm:p-6 lg:p-8 shadow-soft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl border border-gray-50 relative overflow-hidden z-0;
+  }
+  
+  .card::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-maroon via-royal-gold to-primary-maroon transform scale-x-0 transition-transform duration-500;
+  }
+  
+  .card:hover::before {
+    @apply scale-x-100;
+  }
+  
+  .card:hover {
+    @apply z-10;
+  }
+  
+  /* Premium Product Cards */
+  .product-card {
+    @apply bg-white rounded-2xl overflow-hidden shadow-soft transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl relative z-0;
+  }
+  
+  .product-card::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 pointer-events-none;
+  }
+  
+  .product-card:hover::after {
+    @apply opacity-100;
+  }
+  
+  .product-card:hover {
+    @apply z-20;
+  }
+  
+  /* Silk Flow Animation */
+  .silk-flow {
+    @apply transition-all duration-700 ease-out;
+  }
+  
+  .silk-flow:hover {
+    @apply scale-105;
+    filter: brightness(1.1) saturate(1.2);
+  }
+  
+  /* Premium Badges */
+  .badge {
+    @apply inline-flex items-center px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 z-10 relative;
+  }
+  
+  .badge-gold {
+    @apply bg-gradient-to-r from-royal-gold to-yellow-400 text-text-dark shadow-gold animate-pulse;
+  }
+  
+  .badge-maroon {
+    @apply bg-gradient-to-r from-primary-maroon to-deep-maroon text-white shadow-soft;
+  }
+  
+  .badge-offer {
+    @apply bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg animate-bounce;
+  }
+  
+  /* Countdown Timer */
+  .countdown-item {
+    @apply bg-white text-center p-3 sm:p-6 rounded-2xl shadow-soft min-w-16 sm:min-w-20 transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-royal-gold z-10 relative;
+  }
+  
+  .countdown-number {
+    @apply text-2xl sm:text-4xl font-bold text-primary-maroon font-playfair animate-pulse;
+  }
+  
+  .countdown-label {
+    @apply text-xs sm:text-sm text-text-dark uppercase font-semibold tracking-wider;
+  }
+  
+  /* Floating WhatsApp */
+  .whatsapp-float {
+    @apply fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-2xl z-50 transition-all duration-300 hover:scale-110 hover:bg-green-600 animate-bounce;
+  }
+  
+  /* Trust Badges */
+  .trust-badge {
+    @apply flex items-center gap-3 bg-white p-6 rounded-xl shadow-soft transition-all duration-300 hover:shadow-lg hover:-translate-y-1 z-0 relative;
+  }
+  
+  .trust-badge:hover {
+    @apply z-10;
+  }
+  
+  /* Combo Cards */
+  .combo-card {
+    @apply bg-gradient-to-br from-white to-soft-beige rounded-2xl p-8 shadow-lg border-2 border-royal-gold/20 transition-all duration-500 hover:border-royal-gold hover:shadow-2xl hover:-translate-y-2 relative overflow-hidden z-0;
+  }
+  
+  .combo-card::before {
+    content: '✨';
+    @apply absolute top-4 right-4 text-2xl animate-spin;
+  }
+  
+  .combo-card:hover {
+    @apply z-10;
+  }
+  
+  /* Offer Cards */
+  .offer-card {
+    @apply bg-gradient-to-br from-primary-maroon to-deep-maroon text-white rounded-2xl p-8 shadow-2xl transition-all duration-500 hover:scale-105 relative overflow-hidden z-0;
+  }
+  
+  .offer-card::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full transition-transform duration-1000;
+  }
+  
+  .offer-card:hover::before {
+    @apply translate-x-full;
+  }
+  
+  .offer-card:hover {
+    @apply z-10;
+  }
+  
+  /* Filter Panel */
+  .filter-panel {
+    @apply bg-white rounded-2xl p-6 shadow-soft sticky top-24 border border-gray-100 z-10;
+  }
+  
+  /* Mobile Sticky CTA */
+  .mobile-cta {
+    @apply fixed bottom-0 left-0 right-0 bg-gradient-to-r from-green-500 to-green-600 text-white p-4 shadow-2xl z-40 md:hidden;
+  }
+  
+  /* Luxury Divider */
+  .luxury-divider {
+    @apply w-24 h-1 bg-gradient-to-r from-transparent via-royal-gold to-transparent mx-auto my-8;
+  }
+  
+  /* Shimmer Effect */
+  .shimmer {
+    @apply relative overflow-hidden;
+  }
+  
+  .shimmer::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-pulse;
+  }
+  
+  /* Glow Effects */
+  .glow-gold {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+  
+  .glow-maroon {
+    box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);
+  }
+  
+  /* Fabric Texture */
+  .fabric-texture {
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(255,215,0,0.1) 1px, transparent 0);
+    background-size: 20px 20px;
+  }
+  
+  /* Mobile Responsive Styles */
+  .mobile-responsive {
+    @apply block lg:hidden;
+  }
+  
+  .desktop-responsive {
+    @apply hidden lg:block;
+  }
+  
+  .mobile-card {
+    @apply bg-white p-4 rounded-lg shadow-md border border-gray-200;
+  }
+  
+  .mobile-table-row {
+    @apply flex flex-col space-y-2 p-4 border-b border-gray-200;
+  }
+  
+  .mobile-form {
+    @apply fixed inset-0 bg-white z-50 overflow-y-auto;
+  }
+  
+  .mobile-form-header {
+    @apply sticky top-0 bg-white border-b p-4 flex justify-between items-center z-10;
+  }
+  
+  .mobile-form-footer {
+    @apply sticky bottom-0 bg-white border-t p-4 flex gap-3;
+  }
+  
+  /* Touch-friendly buttons */
+  .touch-button {
+    @apply min-h-12 px-4 py-3 text-base font-medium rounded-lg transition-all duration-200;
+  }
+  
+  /* Mobile navigation */
+  .mobile-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40;
+  }
+  
+  .mobile-nav-item {
+    @apply flex flex-col items-center py-2 px-1 text-xs min-h-16;
+  }
+  
+  /* Responsive text sizes */
+  .responsive-text-xs { @apply text-xs lg:text-sm; }
+  .responsive-text-sm { @apply text-sm lg:text-base; }
+  .responsive-text-base { @apply text-base lg:text-lg; }
+  .responsive-text-lg { @apply text-lg lg:text-xl; }
+  .responsive-text-xl { @apply text-xl lg:text-2xl; }
+  .responsive-text-2xl { @apply text-2xl lg:text-3xl; }
+  
+  /* Mobile spacing */
+  .mobile-spacing { @apply space-y-3 lg:space-y-6; }
+  .mobile-padding { @apply p-4 lg:p-6; }
+  .mobile-margin { @apply m-4 lg:m-6; }
+  
+  /* Mobile grid adjustments */
+  .mobile-grid-1 { @apply grid-cols-1 lg:grid-cols-2; }
+  .mobile-grid-2 { @apply grid-cols-2 lg:grid-cols-4; }
+  .mobile-grid-3 { @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3; }
+  
+  /* Scrollable containers */
+  .mobile-scroll {
+    @apply overflow-x-auto;
+  }
+  
+  .mobile-scroll::-webkit-scrollbar {
+    @apply h-2;
+  }
+  
+  .mobile-scroll::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded;
+  }
+  
+  .mobile-scroll::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 rounded;
+  }
+  
+  /* Mobile-first form inputs */
+  .mobile-input {
+    @apply w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-maroon focus:border-primary-maroon;
+  }
+  
+  /* Safe area for mobile devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Premium Animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes goldShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .gold-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,215,0,0.4), transparent);
+    background-size: 200% 100%;
+    animation: goldShimmer 2s infinite;
+  }
+}
