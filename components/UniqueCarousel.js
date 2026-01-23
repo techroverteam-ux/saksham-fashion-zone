@@ -41,10 +41,13 @@ const UniqueCarousel = ({ products, title }) => {
           {products.map((product) => (
             <div key={product.id} className="w-1/3 flex-shrink-0 px-2">
               <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
-                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-500">
-                    {product.name}
-                  </div>
+                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+                  <img 
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                   
                   <MarketingTags badges={product.badges} className="absolute top-3 left-3" />
                   

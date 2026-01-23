@@ -106,7 +106,7 @@ const HomePage = () => {
       name: "Royal Banarasi Silk Saree",
       originalPrice: 12999,
       discountedPrice: 9749,
-      image: "/images/saree-1.jpg",
+      image: "https://sudathi.com/cdn/shop/files/4953S1261_6.JPG?v=1766147381&width=750",
       badges: ["Inauguration Special", "Bestseller"],
       fabric: "Pure Silk",
       occasion: "Wedding",
@@ -118,7 +118,7 @@ const HomePage = () => {
       name: "Designer Embroidered Blouse",
       originalPrice: 3999,
       discountedPrice: 2999,
-      image: "/images/blouse-1.jpg", 
+      image: "https://sudathi.com/cdn/shop/files/MouniroyXSudathi_trust_b19b5aa5-4ed2-45a2-aa71-a7967634bf9f.jpg?v=1766147381&width=750", 
       badges: ["New Arrival", "Hot Deal"],
       fabric: "Silk Blend",
       occasion: "Party",
@@ -130,7 +130,7 @@ const HomePage = () => {
       name: "Bridal Lehenga Set",
       originalPrice: 25999,
       discountedPrice: 18199,
-      image: "/images/lehenga-1.jpg",
+      image: "https://sudathi.com/cdn/shop/files/4953S1261_1.JPGa?v=1766147381&width=750",
       badges: ["Limited Edition", "Premium"], 
       fabric: "Heavy Silk",
       occasion: "Bridal",
@@ -142,7 +142,7 @@ const HomePage = () => {
       name: "Festive Cotton Saree",
       originalPrice: 4999,
       discountedPrice: 3499,
-      image: "/images/saree-2.jpg",
+      image: "https://sudathi.com/cdn/shop/files/4953S1261_6.JPG?v=1766147381&width=750",
       badges: ["Customer Favorite"],
       fabric: "Cotton",
       occasion: "Festival",
@@ -154,7 +154,7 @@ const HomePage = () => {
       name: "Party Wear Blouse",
       originalPrice: 2999,
       discountedPrice: 2199,
-      image: "/images/blouse-2.jpg",
+      image: "https://sudathi.com/cdn/shop/files/MouniroyXSudathi_trust_b19b5aa5-4ed2-45a2-aa71-a7967634bf9f.jpg?v=1766147381&width=750",
       badges: ["New Arrival"],
       fabric: "Georgette",
       occasion: "Party",
@@ -427,9 +427,12 @@ const HomePage = () => {
             {featuredProducts.map((product) => (
               <div key={product.id} className="product-card">
                 <div className="relative">
-                  <div className="h-80 bg-gray-200 silk-flow flex items-center justify-center text-gray-500">
-                    Product Image
-                  </div>
+                  <img 
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-80 object-cover rounded-t-xl"
+                    loading="lazy"
+                  />
                   
                   {/* Enhanced Badges */}
                   <div className="absolute top-4 left-4">

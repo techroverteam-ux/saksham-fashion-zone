@@ -210,10 +210,12 @@ const ProductListing = () => {
       </div>
       
       <div className="relative">
-        <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-500 font-medium text-sm relative" style={{backgroundColor: selectedColor.hex + '20'}}>
-          <div className="absolute inset-0" style={{backgroundColor: selectedColor.hex, opacity: 0.1}}></div>
-          <div className="relative z-10">{product.name}</div>
-        </div>
+        <img 
+          src={selectedColor.hex === '#FFFFFF' ? product.image : product.image}
+          alt={product.name}
+          className="w-full h-48 object-cover rounded-t-xl"
+          style={{filter: selectedColor.hex !== '#FFFFFF' ? `hue-rotate(${selectedColor.code === 'RED' ? '0deg' : selectedColor.code === 'BLUE' ? '240deg' : selectedColor.code === 'GREEN' ? '120deg' : '0deg'})` : 'none'}}
+        />
         
         <div className="absolute top-3 left-3">
           <MarketingTags badges={product.badges} />

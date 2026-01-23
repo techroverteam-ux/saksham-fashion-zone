@@ -5,6 +5,13 @@ const generateProducts = () => {
   const occasions = ['Wedding', 'Party', 'Festival', 'Casual', 'Office'];
   const collections = ['Bridal Collection', 'Party Wear', 'Traditional', 'Contemporary'];
   
+  // Sudathi product images
+  const sudathiImages = [
+    'https://sudathi.com/cdn/shop/files/4953S1261_6.JPG?v=1766147381&width=750',
+    'https://sudathi.com/cdn/shop/files/MouniroyXSudathi_trust_b19b5aa5-4ed2-45a2-aa71-a7967634bf9f.jpg?v=1766147381&width=750',
+    'https://sudathi.com/cdn/shop/files/4953S1261_1.JPGa?v=1766147381&width=750'
+  ];
+  
   const colorVariants = [
     { name: 'Red', hex: '#DC2626', code: 'RED' },
     { name: 'Blue', hex: '#2563EB', code: 'BLUE' },
@@ -44,7 +51,7 @@ const generateProducts = () => {
       occasion,
       originalPrice: basePrice,
       discountedPrice,
-      image: `/images/${category.toLowerCase()}-${i}.jpg`,
+      image: sudathiImages[i % sudathiImages.length],
       badges: i <= 20 ? ['New Arrival'] : i <= 40 ? ['Combo Eligible'] : ['Popular'],
       rating: Math.round((Math.random() * 1.5 + 3.5) * 10) / 10,
       isNew: i <= 30,
