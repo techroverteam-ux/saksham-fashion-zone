@@ -135,7 +135,7 @@ const ProductDetail = () => {
           <div className="space-y-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm text-gray-600">{product.category} > {product.subCategory}</span>
+                <span className="text-sm text-gray-600">{product.category} &gt; {product.subCategory}</span>
               </div>
               <h1 className="text-3xl font-bold text-text-dark mb-4">{product.name}</h1>
               

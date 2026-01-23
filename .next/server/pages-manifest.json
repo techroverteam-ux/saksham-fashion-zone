@@ -1,6 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/": "pages/index.js"
-}
+{"/about":"pages/about.html","/_error":"pages/_error.js","/_app":"pages/_app.js","/cart":"pages/cart.html","/admin":"pages/admin.html","/faq":"pages/faq.html","/contact":"pages/contact.html","/comprehensive-admin":"pages/comprehensive-admin.html","/product-detail":"pages/product-detail.html","/offers":"pages/offers.html","/":"pages/index.html","/privacy-policy":"pages/privacy-policy.html","/products":"pages/products.html","/refund-policy":"pages/refund-policy.html","/terms-conditions":"pages/terms-conditions.html","/shipping-policy":"pages/shipping-policy.html","/_document":"pages/_document.js","/404":"pages/404.html"}
