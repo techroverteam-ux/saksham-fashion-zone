@@ -20,6 +20,7 @@ const ProductListing = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const productsPerPage = 12;
   
   useEffect(() => {
@@ -215,7 +216,7 @@ const ProductListing = () => {
           alt={product.name}
           className="w-full h-64 object-cover rounded-t-xl"
           onError={(e) => {
-            e.target.src = '/images/Screenshot 2026-01-24 at 6.53.02PM.png';
+            e.target.src = 'https://via.placeholder.com/400x300/8B0000/FFFFFF?text=Fashion+Item';
           }}
         />
         
@@ -370,7 +371,163 @@ const ProductListing = () => {
         <div className="flex flex-col lg:flex-row gap-2">
           {/* Filter Sidebar */}
           <div className="lg:w-1/4 px-2">
-            <div className="filter-panel p-3">
+            <div className="lg:hidden mb-4">
+              <button 
+                onClick={() => setShowMobileFilters(!showMobileFilters)}
+                className="w-full bg-primary-maroon text-white py-3 px-4 rounded-lg flex items-center justify-center gap-2"
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+              </button>
+            </div>
+            
+            <div className={`${showMobileFilters ? 'fixed inset-0 bg-black/50 z-50' : 'hidden'} lg:hidden`} onClick={() => setShowMobileFilters(false)}>
+              <div className="bg-white w-80 h-full shadow-2xl overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                <div className="p-4 border-b border-gray-200 sticky top-0 bg-white">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Filter className="w-5 h-5 text-primary-maroon" />
+                      <h2 className="text-lg font-bold text-text-dark">Filters</h2>
+                    </div>
+                    <button 
+                      onClick={() => setShowMobileFilters(false)}
+                      className="p-2 hover:bg-gray-100 rounded-full"
+                    >
+                      <X className="w-5 h-5 text-gray-600" />
+                    </button>
+                  </div>
+                  {hasActiveFilters() && (
+                    <button 
+                      onClick={resetFilters}
+                      className="mt-2 text-sm text-primary-maroon hover:underline font-medium"
+                    >
+                      Reset All Filters
+                    </button>
+                  )}
+                </div>
+                
+                <div className="p-4 space-y-6">
+                  {/* Category Filter */}
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h3 className="font-bold mb-3 text-text-dark flex items-center gap-2">
+                      <span className="w-2 h-2 bg-primary-maroon rounded-full"></span>
+                      Category
+                    </h3>
+                    <div className="space-y-3">
+                      {productsDataState.filterOptions.categories.map((category) => (
+                        <label key={category} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-white transition-colors">
+                          <input 
+                            type="checkbox" 
+                            className="w-4 h-4 rounded border-gray-300 text-primary-maroon focus:ring-primary-maroon"
+                            checked={filters.categories.includes(category)}
+                            onChange={(e) => handleFilterChange('categories', category, e.target.checked)}
+                          />
+                          <span className="font-medium">{category}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Price Range Filter */}
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h3 className="font-bold mb-3 text-text-dark flex items-center gap-2">
+                      <span className="w-2 h-2 bg-primary-maroon rounded-full"></span>
+                      Price Range
+                    </h3>
+                    <div className="space-y-3">
+                      {productsDataState.filterOptions.priceRanges.map((range) => (
+                        <label key={range.label} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-white transition-colors">
+                          <input 
+                            type="radio" 
+                            name="priceRange"
+                            className="w-4 h-4 border-gray-300 text-primary-maroon focus:ring-primary-maroon"
+                            checked={filters.priceRange?.label === range.label}
+                            onChange={(e) => handleFilterChange('priceRange', range, e.target.checked)}
+                          />
+                          <span className="font-medium">{range.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Fabric Filter */}
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h3 className="font-bold mb-3 text-text-dark flex items-center gap-2">
+                      <span className="w-2 h-2 bg-primary-maroon rounded-full"></span>
+                      Fabric
+                    </h3>
+                    <div className="space-y-3">
+                      {productsDataState.filterOptions.fabrics.map((fabric) => (
+                        <label key={fabric} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-white transition-colors">
+                          <input 
+                            type="checkbox" 
+                            className="w-4 h-4 rounded border-gray-300 text-primary-maroon focus:ring-primary-maroon"
+                            checked={filters.fabrics.includes(fabric)}
+                            onChange={(e) => handleFilterChange('fabrics', fabric, e.target.checked)}
+                          />
+                          <span className="font-medium">{fabric}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Colors Filter */}
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h3 className="font-bold mb-3 text-text-dark flex items-center gap-2">
+                      <span className="w-2 h-2 bg-primary-maroon rounded-full"></span>
+                      Colors
+                    </h3>
+                    <div className="grid grid-cols-3 gap-3">
+                      {productsDataState.filterOptions.colors.map((color) => {
+                        const colorData = {
+                          'Red': '#DC2626', 'Blue': '#2563EB', 'Green': '#059669', 'Pink': '#DB2777',
+                          'Purple': '#7C3AED', 'Orange': '#EA580C', 'Yellow': '#D97706', 'Maroon': '#7F1D1D',
+                          'Navy': '#1E3A8A', 'Black': '#000000', 'White': '#FFFFFF', 'Gold': '#F59E0B'
+                        };
+                        return (
+                          <label key={color} className="flex flex-col items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white transition-colors">
+                            <input 
+                              type="checkbox" 
+                              className="sr-only"
+                              checked={filters.colors.includes(color)}
+                              onChange={(e) => handleFilterChange('colors', color, e.target.checked)}
+                            />
+                            <div 
+                              className={`w-10 h-10 rounded-full border-3 transition-all ${
+                                filters.colors.includes(color) 
+                                  ? 'border-primary-maroon scale-110 shadow-lg' 
+                                  : 'border-gray-300'
+                              }`}
+                              style={{backgroundColor: colorData[color]}}
+                            >
+                              {color === 'White' && (
+                                <div className="w-full h-full rounded-full border border-gray-200"></div>
+                              )}
+                            </div>
+                            <span className="text-xs font-medium text-center">{color}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  
+                  {/* Combo Eligible Filter */}
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        className="w-4 h-4 rounded border-gray-300 text-primary-maroon focus:ring-primary-maroon"
+                        checked={filters.comboEligible}
+                        onChange={(e) => handleFilterChange('comboEligible', null, e.target.checked)}
+                      />
+                      <span className="font-bold text-primary-maroon">Combo Eligible Only</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="hidden lg:block filter-panel p-3">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4 text-primary-maroon" />
@@ -496,11 +653,9 @@ const ProductListing = () => {
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-6">
               <div className="flex items-center gap-4">
-                <img 
-                  src="/images/Screenshot 2026-01-24 at 6.53.12PM.png" 
-                  alt="Collection" 
-                  className="w-16 h-16 rounded-full object-cover border-2 border-primary-maroon"
-                />
+                <div className="w-16 h-16 bg-primary-maroon rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  SF
+                </div>
                 <div>
                   <h1 className="text-xl md:text-2xl font-bold text-text-dark">Our Collection</h1>
                   <p className="text-gray-600 mt-1 text-sm">
@@ -622,11 +777,9 @@ const ProductListing = () => {
               </>
             ) : (
               <div className="text-center py-12">
-                <img 
-                  src="/images/Screenshot 2026-01-24 at 6.53.23PM.png" 
-                  alt="No products" 
-                  className="w-32 h-32 mx-auto mb-4 rounded-full object-cover opacity-50"
-                />
+                <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-4xl">
+                  🔍
+                </div>
                 <h3 className="text-lg font-bold text-text-dark mb-3">No products found</h3>
                 <p className="text-gray-600 mb-6">Try adjusting your filters</p>
                 <button onClick={resetFilters} className="bg-primary-maroon text-white px-6 py-2 rounded-lg">

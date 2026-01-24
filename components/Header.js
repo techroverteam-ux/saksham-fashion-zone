@@ -111,16 +111,114 @@ const Header = ({ cartCount = 0 }) => {
         </div>
         
         {isMenuOpen && (
-          <nav className="md:hidden mt-4 pb-4 border-t pt-4">
-            <div className="flex flex-col space-y-4">
-              <Link href="/" className="text-text-dark hover:text-primary-maroon transition-colors font-medium">Home</Link>
-              <Link href="/products" className="text-text-dark hover:text-primary-maroon transition-colors font-medium">Collection</Link>
-              <Link href="/offers" className="text-text-dark hover:text-primary-maroon transition-colors font-medium">Offers</Link>
-              <Link href="/about" className="text-text-dark hover:text-primary-maroon transition-colors font-medium">About</Link>
-              <Link href="/contact" className="text-text-dark hover:text-primary-maroon transition-colors font-medium">Contact</Link>
-              <Link href="/cart" className="text-text-dark hover:text-primary-maroon transition-colors font-medium">Cart ({cartCount})</Link>
+          <div className="md:hidden fixed inset-0 bg-black/50 z-50" onClick={() => setIsMenuOpen(false)}>
+            <div className="bg-white w-80 h-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+              <div className="p-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-primary-maroon to-deep-maroon rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">S</span>
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold text-primary-maroon">Saksham</div>
+                      <div className="text-xs text-royal-gold">Fashion Zone</div>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="p-2 hover:bg-gray-100 rounded-full"
+                  >
+                    <X className="w-6 h-6 text-gray-600" />
+                  </button>
+                </div>
+              </div>
+              
+              <nav className="p-6">
+                <div className="space-y-6">
+                  <Link 
+                    href="/" 
+                    className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-primary-maroon/10 rounded-lg flex items-center justify-center">
+                      <span className="text-primary-maroon text-sm font-bold">H</span>
+                    </div>
+                    <span className="text-gray-800 font-medium">Home</span>
+                  </Link>
+                  
+                  <Link 
+                    href="/products" 
+                    className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-primary-maroon/10 rounded-lg flex items-center justify-center">
+                      <span className="text-primary-maroon text-sm font-bold">C</span>
+                    </div>
+                    <span className="text-gray-800 font-medium">Collection</span>
+                  </Link>
+                  
+                  <Link 
+                    href="/offers" 
+                    className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-primary-maroon/10 rounded-lg flex items-center justify-center">
+                      <span className="text-primary-maroon text-sm font-bold">O</span>
+                    </div>
+                    <span className="text-gray-800 font-medium">Offers</span>
+                  </Link>
+                  
+                  <Link 
+                    href="/about" 
+                    className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-primary-maroon/10 rounded-lg flex items-center justify-center">
+                      <span className="text-primary-maroon text-sm font-bold">A</span>
+                    </div>
+                    <span className="text-gray-800 font-medium">About</span>
+                  </Link>
+                  
+                  <Link 
+                    href="/contact" 
+                    className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-primary-maroon/10 rounded-lg flex items-center justify-center">
+                      <span className="text-primary-maroon text-sm font-bold">C</span>
+                    </div>
+                    <span className="text-gray-800 font-medium">Contact</span>
+                  </Link>
+                  
+                  <Link 
+                    href="/cart" 
+                    className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-primary-maroon/10 rounded-lg flex items-center justify-center relative">
+                      <ShoppingBag className="w-4 h-4 text-primary-maroon" />
+                      {cartCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                          {cartCount}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-gray-800 font-medium">Cart ({cartCount})</span>
+                  </Link>
+                </div>
+                
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <a 
+                    href="tel:9588253490" 
+                    className="flex items-center justify-center space-x-3 bg-green-500 text-white p-4 rounded-lg hover:bg-green-600 transition-colors"
+                  >
+                    <Phone className="w-5 h-5" />
+                    <span className="font-semibold">Call Now: 9588253490</span>
+                  </a>
+                </div>
+              </nav>
             </div>
-          </nav>
+          </div>
         )}
       </div>
     </header>

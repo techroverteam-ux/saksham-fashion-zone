@@ -351,6 +351,15 @@
     background-size: 200% 100%;
     animation: goldShimmer 2s infinite;
   }
+  /* Scrollbar hide for mobile horizontal scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 /* Toast Animation */
 @keyframes slide-in {

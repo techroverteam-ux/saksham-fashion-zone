@@ -93,11 +93,9 @@ const CartPage = () => {
         
         {items.length === 0 ? (
           <div className="text-center py-20">
-            <img 
-              src="/images/Screenshot 2026-01-24 at 6.53.23PM.png" 
-              alt="Empty cart" 
-              className="w-32 h-32 mx-auto mb-6 rounded-full object-cover opacity-50"
-            />
+            <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-4xl">
+              🛒
+            </div>
             <h2 className="text-2xl font-bold text-text-dark mb-4">Your cart is empty</h2>
             <p className="text-gray-600 mb-8">Add some beautiful sarees and blouses to get started</p>
             <a href="/products" className="btn-primary">
@@ -114,7 +112,7 @@ const CartPage = () => {
                     <img 
                       src={(() => {
                         const productData = productsData.products.find(p => p.id === item.id);
-                        return productData?.image || '/images/Screenshot 2026-01-24 at 6.53.02PM.png';
+                        return productData?.image || 'https://via.placeholder.com/300x400/8B0000/FFFFFF?text=Fashion+Item';
                       })()} 
                       alt={item.name}
                       className="w-32 h-40 object-cover rounded-lg border"

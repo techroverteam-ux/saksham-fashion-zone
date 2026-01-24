@@ -270,7 +270,7 @@ const HomePage = () => {
       </section>
 
       {/* Trust Badges */}
-      <section className="py-16 bg-white relative">
+      <section className="py-16 bg-ivory-white relative">
         <div className="absolute inset-0 bg-gradient-to-r from-soft-beige/50 via-white to-soft-beige/50"></div>
         <div className="relative z-10 max-w-full mx-auto px-2">
           <div className="grid md:grid-cols-3 gap-8">
@@ -286,7 +286,7 @@ const HomePage = () => {
       </section>
 
       {/* Collections Section */}
-      <section className="py-12 sm:py-16 bg-white">
+      <section className="py-12 sm:py-16 bg-ivory-white">
         <div className="w-full px-2">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-text-dark mb-4">
@@ -299,19 +299,19 @@ const HomePage = () => {
           </div>
           
           {/* Main Categories */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-12">
             <div className="group cursor-pointer">
               <Link href="/products?category=Sarees">
                 <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-                  <div className="h-64 bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white relative">
+                  <div className="h-48 md:h-64 bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white relative">
                     <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="relative z-10 text-center p-6">
-                      <h3 className="text-2xl font-bold mb-2">Sarees</h3>
-                      <p className="text-white/90 mb-4">Traditional & Designer</p>
-                      <div className="text-sm opacity-80">
+                    <div className="relative z-10 text-center p-4 md:p-6">
+                      <h3 className="text-lg md:text-2xl font-bold mb-2">Sarees</h3>
+                      <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">Traditional & Designer</p>
+                      <div className="text-xs md:text-sm opacity-80">
                         Banarasi • Silk • Cotton • Georgette
                       </div>
-                      <div className="mt-4 text-lg font-semibold">
+                      <div className="mt-2 md:mt-4 text-sm md:text-lg font-semibold">
                         {productsData.products.filter(p => p.category === 'Sarees').length}+ Items
                       </div>
                     </div>
@@ -323,15 +323,15 @@ const HomePage = () => {
             <div className="group cursor-pointer">
               <Link href="/products?category=Blouses">
                 <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-                  <div className="h-64 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white relative">
+                  <div className="h-48 md:h-64 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white relative">
                     <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="relative z-10 text-center p-6">
-                      <h3 className="text-2xl font-bold mb-2">Blouses</h3>
-                      <p className="text-white/90 mb-4">Designer & Traditional</p>
-                      <div className="text-sm opacity-80">
+                    <div className="relative z-10 text-center p-4 md:p-6">
+                      <h3 className="text-lg md:text-2xl font-bold mb-2">Blouses</h3>
+                      <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">Designer & Traditional</p>
+                      <div className="text-xs md:text-sm opacity-80">
                         Embroidered • Silk • Cotton • Party Wear
                       </div>
-                      <div className="mt-4 text-lg font-semibold">
+                      <div className="mt-2 md:mt-4 text-sm md:text-lg font-semibold">
                         {productsData.products.filter(p => p.category === 'Blouses').length}+ Items
                       </div>
                     </div>
@@ -343,15 +343,15 @@ const HomePage = () => {
             <div className="group cursor-pointer">
               <Link href="/products?category=Lehengas">
                 <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-                  <div className="h-64 bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white relative">
+                  <div className="h-48 md:h-64 bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white relative">
                     <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="relative z-10 text-center p-6">
-                      <h3 className="text-2xl font-bold mb-2">Lehengas</h3>
-                      <p className="text-white/90 mb-4">Bridal & Party</p>
-                      <div className="text-sm opacity-80">
+                    <div className="relative z-10 text-center p-4 md:p-6">
+                      <h3 className="text-lg md:text-2xl font-bold mb-2">Lehengas</h3>
+                      <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">Bridal & Party</p>
+                      <div className="text-xs md:text-sm opacity-80">
                         Heavy Silk • Designer • Bridal
                       </div>
-                      <div className="mt-4 text-lg font-semibold">
+                      <div className="mt-2 md:mt-4 text-sm md:text-lg font-semibold">
                         {productsData.products.filter(p => p.category === 'Lehengas').length}+ Items
                       </div>
                     </div>
@@ -394,71 +394,85 @@ const HomePage = () => {
 
       {/* Marketing Carousels */}
       <section className="py-16 bg-gradient-to-br from-soft-beige/30 to-ivory-white">
-        <div className="w-full px-2 space-y-12">
-          <UniqueCarousel products={featuredProducts} title="✨ Trending Now" />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Bestsellers Section */}
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4 md:mb-6">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                  <span className="text-xl md:text-2xl">🏆</span>
-                </div>
-                <h3 className="text-xl md:text-2xl font-bold text-text-dark">Bestsellers</h3>
+        <div className="w-full px-2 space-y-4">
+          {/* Trending Now - Horizontal Scroll */}
+          <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-3 md:p-4 text-white">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                <span className="text-lg">✨</span>
               </div>
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
-                {featuredProducts.filter(p => p.badges?.includes('Bestseller')).slice(0, 4).map((product) => (
-                  <div key={product.id} className="group cursor-pointer">
-                    <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
+              <h3 className="text-lg md:text-xl font-bold">Trending Now</h3>
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              {featuredProducts.slice(0, 6).map((product) => (
+                <div key={product.id} className="flex-shrink-0 w-28 md:w-32">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 hover:bg-white/20 transition-colors">
+                    <div className="aspect-square overflow-hidden rounded mb-2">
                       <img 
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        className="w-full h-full object-cover"
                       />
-                      <div className="absolute top-2 right-2">
-                        <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                          {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
-                        </span>
-                      </div>
                     </div>
-                    <h4 className="font-semibold text-sm line-clamp-2 mb-1">{product.name}</h4>
-                    <div className="flex items-center gap-2">
-                      <span className="text-primary-maroon font-bold text-sm">₹{product.discountedPrice.toLocaleString()}</span>
-                      <span className="text-gray-400 line-through text-xs">₹{product.originalPrice.toLocaleString()}</span>
+                    <h4 className="text-xs font-semibold line-clamp-2 mb-1">{product.name}</h4>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold">₹{product.discountedPrice.toLocaleString()}</span>
+                      <span className="text-xs bg-red-500 px-1 py-0.5 rounded">
+                        {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
+                      </span>
                     </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Bestsellers Section */}
+            <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-3 text-white">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  <span className="text-lg">🏆</span>
+                </div>
+                <h3 className="text-lg font-bold">Bestsellers</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {featuredProducts.filter(p => p.badges?.includes('Bestseller')).slice(0, 4).map((product) => (
+                  <div key={product.id} className="bg-white/10 backdrop-blur-sm rounded-lg p-2 hover:bg-white/20 transition-colors">
+                    <div className="aspect-square overflow-hidden rounded mb-2">
+                      <img 
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <h4 className="text-xs font-semibold line-clamp-1 mb-1">{product.name}</h4>
+                    <div className="text-xs font-bold">₹{product.discountedPrice.toLocaleString()}</div>
                   </div>
                 ))}
               </div>
             </div>
             
             {/* New Arrivals Section */}
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-4 md:mb-6">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-xl md:text-2xl">🆕</span>
+            <div className="bg-gradient-to-br from-green-400 to-blue-500 rounded-2xl p-3 text-white">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  <span className="text-lg">🆕</span>
                 </div>
-                <h3 className="text-xl md:text-2xl font-bold text-text-dark">New Arrivals</h3>
+                <h3 className="text-lg font-bold">New Arrivals</h3>
               </div>
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
+              <div className="grid grid-cols-2 gap-2">
                 {featuredProducts.filter(p => p.badges?.includes('New Arrival')).slice(0, 4).map((product) => (
-                  <div key={product.id} className="group cursor-pointer">
-                    <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
+                  <div key={product.id} className="bg-white/10 backdrop-blur-sm rounded-lg p-2 hover:bg-white/20 transition-colors">
+                    <div className="aspect-square overflow-hidden rounded mb-2">
                       <img 
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        className="w-full h-full object-cover"
                       />
-                      <div className="absolute top-2 right-2">
-                        <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                          {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
-                        </span>
-                      </div>
                     </div>
-                    <h4 className="font-semibold text-sm line-clamp-2 mb-1">{product.name}</h4>
-                    <div className="flex items-center gap-2">
-                      <span className="text-primary-maroon font-bold text-sm">₹{product.discountedPrice.toLocaleString()}</span>
-                      <span className="text-gray-400 line-through text-xs">₹{product.originalPrice.toLocaleString()}</span>
-                    </div>
+                    <h4 className="text-xs font-semibold line-clamp-1 mb-1">{product.name}</h4>
+                    <div className="text-xs font-bold">₹{product.discountedPrice.toLocaleString()}</div>
                   </div>
                 ))}
               </div>
@@ -468,7 +482,7 @@ const HomePage = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-ivory-white">
         <div className="w-full px-2">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-text-dark mb-6">
@@ -482,7 +496,7 @@ const HomePage = () => {
           
           {/* Carousel Container */}
           <div className="relative overflow-hidden">
-            <div className="flex transition-transform duration-300 ease-in-out" style={{transform: `translateX(-${currentSlide * (window.innerWidth < 768 ? 100 : 25)}%)`}}>
+            <div className="flex transition-transform duration-300 ease-in-out" style={{transform: `translateX(-${currentSlide * 25}%)`}}>
               {featuredProducts.map((product) => (
                 <div key={product.id} className="w-full md:w-1/4 flex-shrink-0 px-3">
                   <div className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100">
@@ -492,7 +506,7 @@ const HomePage = () => {
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         onError={(e) => {
-                          e.target.src = '/images/Screenshot 2026-01-24 at 6.53.02PM.png';
+                          e.target.src = 'https://via.placeholder.com/400x500/8B0000/FFFFFF?text=Fashion+Item';
                         }}
                       />
                       
@@ -578,9 +592,9 @@ const HomePage = () => {
             </button>
             
             <button 
-              onClick={() => setCurrentSlide(Math.min(featuredProducts.length - (window.innerWidth < 768 ? 1 : 4), currentSlide + 1))}
+              onClick={() => setCurrentSlide(Math.min(featuredProducts.length - 4, currentSlide + 1))}
               className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all duration-300 disabled:opacity-50"
-              disabled={currentSlide >= featuredProducts.length - (window.innerWidth < 768 ? 1 : 4)}
+              disabled={currentSlide >= featuredProducts.length - 4}
             >
               <svg className="w-4 h-4 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -672,7 +686,7 @@ const HomePage = () => {
       </section>
 
       {/* Store Information */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-ivory-white">
         <div className="w-full px-2">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
