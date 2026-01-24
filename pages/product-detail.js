@@ -1,42 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Heart, Share2, Star, Truck, Shield, RotateCcw, MessageCircle, ShoppingBag, Plus, Minus } from 'lucide-react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { useCart } from '../context/CartContext';
+import productsData from '../data/products.js';
 
 const ProductDetail = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const { addToCart, getCartCount } = useCart();
+  const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedColor, setSelectedColor] = useState(null);
 
-  const product = {
-    id: 1,
-    name: "Royal Banarasi Silk Saree",
-    category: "Sarees",
-    subCategory: "Silk Sarees",
-    collection: "Bridal Collection",
-    fabric: "Pure Banarasi Silk",
-    occasion: "Wedding",
-    originalPrice: 12999,
-    discountedPrice: 9749,
-    images: [
-      "/api/placeholder/600/800",
-      "/api/placeholder/600/800",
-      "/api/placeholder/600/800",
-      "/api/placeholder/600/800"
-    ],
-    rating: 4.8,
-    reviewCount: 156,
-    description: "Exquisite Royal Banarasi Silk Saree crafted with traditional weaving techniques. Features intricate gold zari work and beautiful floral motifs. Perfect for weddings and special occasions.",
-    features: [
-      "100% Pure Banarasi Silk",
-      "Traditional Handwoven",
-      "Gold Zari Work",
-      "6.5 meters length",
-      "Includes matching blouse piece",
-      "Dry clean only"
-    ],
-    sizes: ["Free Size"],
-    colors: ["Maroon", "Royal Blue", "Emerald Green"],
-    inStock: true,
-    comboEligible: true
+  useEffect(() => {
+    if (id) {
+      const adminProducts = localStorage.getItem('saksham-products');
+      const data = adminProducts ? JSON.parse(adminProducts) : productsData;
+      const foundProduct = data.products.find(p => p.id === parseInt(id));
+      if (foundProduct) {
+        setProduct(foundProduct);
+        setSelectedColor(foundProduct.selectedColor);
+      }
+    }
+  }, [id]);
+
+  if (!product) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+
+  const handleAddToCart = () => {
+    for (let i = 0; i < quantity; i++) {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        discountedPrice: product.discountedPrice,
+        originalPrice: product.originalPrice,
+        fabric: product.fabric,
+        occasion: product.occasion,
+        category: product.category,
+        selectedColor: selectedColor
+      });
+    }
   };
 
   const comboProducts = [
@@ -70,21 +75,7 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-ivory-white">
-      {/* Header */}
-      <header className="bg-white shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-primary-maroon">Saksham Fashion Zone</h1>
-            <nav className="hidden md:flex space-x-6">
-              <a href="/" className="text-text-dark hover:text-primary-maroon">Home</a>
-              <a href="/products" className="text-text-dark hover:text-primary-maroon">Collection</a>
-              <a href="/offers" className="text-text-dark hover:text-primary-maroon">Offers</a>
-              <a href="/about" className="text-text-dark hover:text-primary-maroon">About</a>
-              <a href="/contact" className="text-text-dark hover:text-primary-maroon">Contact</a>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header cartCount={getCartCount()} />
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-12">
@@ -92,9 +83,10 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div className="relative">
               <img 
-                src={product.images[selectedImage]} 
+                src={product.image}
                 alt={product.name}
                 className="w-full h-[600px] object-cover rounded-lg"
+                style={{filter: selectedColor?.hex !== '#FFFFFF' ? `hue-rotate(${selectedColor?.code === 'RED' ? '0deg' : selectedColor?.code === 'BLUE' ? '240deg' : selectedColor?.code === 'GREEN' ? '120deg' : '0deg'})` : 'none'}}
               />
               <div className="absolute top-4 right-4 flex gap-2">
                 <button className="p-2 bg-white rounded-full shadow-md hover:bg-gray-50">
@@ -113,19 +105,23 @@ const ProductDetail = () => {
             </div>
             
             <div className="grid grid-cols-4 gap-4">
-              {product.images.map((image, index) => (
+              {product.colors.map((color, index) => (
                 <button
                   key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`border-2 rounded-lg overflow-hidden ${
-                    selectedImage === index ? 'border-primary-maroon' : 'border-gray-200'
+                  onClick={() => setSelectedColor(color)}
+                  className={`border-2 rounded-lg overflow-hidden p-4 ${
+                    selectedColor?.code === color.code ? 'border-primary-maroon' : 'border-gray-200'
                   }`}
                 >
-                  <img 
-                    src={image} 
-                    alt={`${product.name} ${index + 1}`}
-                    className="w-full h-24 object-cover"
-                  />
+                  <div 
+                    className="w-full h-16 rounded"
+                    style={{backgroundColor: color.hex}}
+                  >
+                    {color.hex === '#FFFFFF' && (
+                      <div className="w-full h-full rounded border border-gray-200"></div>
+                    )}
+                  </div>
+                  <div className="text-xs mt-2 text-center">{color.name}</div>
                 </button>
               ))}
             </div>
@@ -198,17 +194,20 @@ const ProductDetail = () => {
             {/* Product Options */}
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold mb-2">Size:</h3>
+                <h3 className="font-semibold mb-2">Color: {selectedColor?.name}</h3>
                 <div className="flex gap-2">
-                  {product.sizes.map((size) => (
+                  {product.colors.map((color, index) => (
                     <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 border rounded-lg ${
-                        selectedSize === size ? 'border-primary-maroon bg-primary-maroon text-white' : 'border-gray-300'
+                      key={index}
+                      onClick={() => setSelectedColor(color)}
+                      className={`w-8 h-8 rounded-full border-2 ${
+                        selectedColor?.code === color.code ? 'border-primary-maroon scale-110' : 'border-gray-300'
                       }`}
+                      style={{backgroundColor: color.hex}}
                     >
-                      {size}
+                      {color.hex === '#FFFFFF' && (
+                        <div className="w-full h-full rounded-full border border-gray-200"></div>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -236,14 +235,18 @@ const ProductDetail = () => {
             
             {/* Action Buttons */}
             <div className="space-y-3">
-              <button className="w-full btn-primary text-lg py-4">
+              <button onClick={handleAddToCart} className="w-full btn-primary text-lg py-4">
                 <ShoppingBag className="w-5 h-5 inline mr-2" />
-                Add to Package
+                Add {quantity > 1 ? `${quantity} ` : ''}to Cart
               </button>
-              <button className="w-full btn-gold text-lg py-4">
+              <a 
+                href={`https://wa.me/919588253490?text=Hi! I'm interested in ${product.name} - ₹${product.discountedPrice}`}
+                className="w-full btn-gold text-lg py-4 block text-center"
+                target="_blank"
+              >
                 <MessageCircle className="w-5 h-5 inline mr-2" />
                 WhatsApp Inquiry
-              </button>
+              </a>
             </div>
             
             {/* Features */}
@@ -360,6 +363,8 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };

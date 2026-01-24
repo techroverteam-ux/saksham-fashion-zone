@@ -88,12 +88,16 @@ const CartPage = () => {
     <div className="min-h-screen bg-ivory-white">
       <Header cartCount={items.reduce((count, item) => count + item.quantity, 0)} />
       
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="w-full px-2 py-8">
         <h1 className="text-3xl md:text-4xl font-bold text-text-dark mb-8">Shopping Cart</h1>
         
         {items.length === 0 ? (
           <div className="text-center py-20">
-            <ShoppingBag className="w-20 h-20 text-gray-400 mx-auto mb-6" />
+            <img 
+              src="/images/Screenshot 2026-01-24 at 6.53.23PM.png" 
+              alt="Empty cart" 
+              className="w-32 h-32 mx-auto mb-6 rounded-full object-cover opacity-50"
+            />
             <h2 className="text-2xl font-bold text-text-dark mb-4">Your cart is empty</h2>
             <p className="text-gray-600 mb-8">Add some beautiful sarees and blouses to get started</p>
             <a href="/products" className="btn-primary">
@@ -107,14 +111,29 @@ const CartPage = () => {
               {items.map((item) => (
                 <div key={item.id} className="card">
                   <div className="flex gap-4">
-                    <div className="w-24 h-32 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 text-sm">
-                      {item.name}
-                    </div>
+                    <img 
+                      src={(() => {
+                        const productData = productsData.products.find(p => p.id === item.id);
+                        return productData?.image || '/images/Screenshot 2026-01-24 at 6.53.02PM.png';
+                      })()} 
+                      alt={item.name}
+                      className="w-20 h-24 object-cover rounded-lg border"
+                    />
                     
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-text-dark mb-2">{item.name}</h3>
                       <div className="text-sm text-gray-600 mb-2">
                         <span>Fabric: {item.fabric}</span> • <span>Occasion: {item.occasion}</span>
+                        {item.selectedColor && (
+                          <div className="flex items-center gap-2 mt-1">
+                            <span>Color:</span>
+                            <div 
+                              className="w-4 h-4 rounded-full border"
+                              style={{backgroundColor: item.selectedColor.hex}}
+                            ></div>
+                            <span>{item.selectedColor.name}</span>
+                          </div>
+                        )}
                       </div>
                       
                       {/* Stock Info */}
@@ -160,6 +179,9 @@ const CartPage = () => {
                           </div>
                           <div className="text-sm text-gray-500 line-through">
                             ₹{(item.originalPrice * item.quantity).toLocaleString()}
+                          </div>
+                          <div className="text-xs text-green-600 font-medium">
+                            Save ₹{((item.originalPrice - item.discountedPrice) * item.quantity).toLocaleString()}
                           </div>
                         </div>
                         

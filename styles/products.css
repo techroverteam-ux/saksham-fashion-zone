@@ -1,0 +1,63 @@
+/* Products Page Enhancements */
+.hero-banner {
+  background: linear-gradient(135deg, #7F1D1D 0%, #991B1B 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/images/Screenshot 2026-01-24 at 6.53.31PM.png') center/cover;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.product-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.product-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.filter-panel {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid rgba(127, 29, 29, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.combo-banner {
+  background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #F59E0B 100%);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.image-overlay {
+  background: linear-gradient(45deg, rgba(127, 29, 29, 0.8), rgba(153, 27, 27, 0.6));
+}
+
+@media (max-width: 768px) {
+  .hero-banner {
+    height: 200px;
+  }
+  
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+}

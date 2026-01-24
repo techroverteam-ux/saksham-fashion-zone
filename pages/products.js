@@ -32,7 +32,7 @@ const ProductListing = () => {
       setProductsDataState(data);
       setProducts(data.products);
       setFilteredProducts(data.products);
-      setDisplayedProducts(data.products.slice(0, 4));
+      setDisplayedProducts(data.products.slice(0, 30));
       setLoading(false);
     }, 1000);
   }, []);
@@ -62,7 +62,7 @@ const ProductListing = () => {
   };
   
   useEffect(() => {
-    setDisplayedProducts(filteredProducts.slice(0, currentPage * 4));
+    setDisplayedProducts(filteredProducts.slice(0, currentPage * 30));
   }, [filteredProducts, currentPage]);
   const [filters, setFilters] = useState({
     categories: [],
@@ -214,7 +214,6 @@ const ProductListing = () => {
           src={selectedColor.hex === '#FFFFFF' ? product.image : product.image}
           alt={product.name}
           className="w-full h-48 object-cover rounded-t-xl"
-          style={{filter: selectedColor.hex !== '#FFFFFF' ? `hue-rotate(${selectedColor.code === 'RED' ? '0deg' : selectedColor.code === 'BLUE' ? '240deg' : selectedColor.code === 'GREEN' ? '120deg' : '0deg'})` : 'none'}}
         />
         
         <div className="absolute top-3 left-3">
@@ -321,13 +320,13 @@ const ProductListing = () => {
           >
             Add {quantity > 1 ? `${quantity} ` : ''}to Cart
           </button>
-          <button 
-            onClick={() => setSelectedProduct(product)}
+          <Link 
+            href={`/product-detail?id=${product.id}`}
             className="bg-gray-100 text-gray-700 p-2 rounded-lg hover:bg-gray-200 transition-colors"
             title="Quick View"
           >
             <MessageCircle className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
       </div>
     </div>
@@ -364,10 +363,10 @@ const ProductListing = () => {
       {/* Header */}
       <Header cartCount={getCartCount()} />
 
-      <div className="max-w-6xl mx-auto px-4 py-4">
-        <div className="flex flex-col lg:flex-row gap-4">
+      <div className="w-full px-2 py-4">
+        <div className="flex flex-col lg:flex-row gap-2">
           {/* Filter Sidebar */}
-          <div className="lg:w-1/4">
+          <div className="lg:w-1/4 px-2">
             <div className="filter-panel p-3">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -490,17 +489,24 @@ const ProductListing = () => {
           </div>
           
           {/* Products Section */}
-          <div className="lg:w-3/4">
+          <div className="lg:w-3/4 px-2">
             {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
-              <div>
-                <h1 className="text-xl md:text-2xl font-bold text-text-dark">Our Collection</h1>
-                <p className="text-gray-600 mt-1 text-sm">
-                  {filteredProducts.length} of {products.length} products
-                  {hasActiveFilters() && (
-                    <span className="ml-2 text-primary-maroon font-medium">(filtered)</span>
-                  )}
-                </p>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-6">
+              <div className="flex items-center gap-4">
+                <img 
+                  src="/images/Screenshot 2026-01-24 at 6.53.12PM.png" 
+                  alt="Collection" 
+                  className="w-16 h-16 rounded-full object-cover border-2 border-primary-maroon"
+                />
+                <div>
+                  <h1 className="text-xl md:text-2xl font-bold text-text-dark">Our Collection</h1>
+                  <p className="text-gray-600 mt-1 text-sm">
+                    {filteredProducts.length} of {products.length} products
+                    {hasActiveFilters() && (
+                      <span className="ml-2 text-primary-maroon font-medium">(filtered)</span>
+                    )}
+                  </p>
+                </div>
               </div>
               
               <div className="flex items-center gap-3 w-full md:w-auto">
@@ -578,23 +584,12 @@ const ProductListing = () => {
               </div>
             )}
             
-            {/* Combo Offer Banner */}
-            <div className="bg-gradient-to-r from-royal-gold via-yellow-400 to-accent-gold rounded-2xl p-8 mb-8 text-center shadow-2xl">
-              <h2 className="text-2xl md:text-3xl font-bold text-text-dark mb-3">
-                🎉 Inauguration Special Combo Offer
-              </h2>
-              <p className="text-text-dark text-lg mb-2">
-                Buy any Saree + Blouse and get <strong className="text-2xl">Extra 5% OFF</strong>
-              </p>
-              <p className="text-sm text-text-dark/80">
-                Valid only on 1st February | Auto-applied at checkout
-              </p>
-            </div>
+            {/* Combo Offer Banner - Removed */}
             
             {/* Products Grid */}
             {loading ? (
               <div className={`grid gap-4 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'}`}>
-                {Array(12).fill(0).map((_, index) => (
+                {Array(30).fill(0).map((_, index) => (
                   <ProductSkeleton key={index} />
                 ))}
               </div>
@@ -608,7 +603,7 @@ const ProductListing = () => {
                 
                 {loadingMore && (
                   <div className={`grid gap-4 mt-4 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'}`}>
-                    {Array(4).fill(0).map((_, index) => (
+                    {Array(30).fill(0).map((_, index) => (
                       <ProductSkeleton key={`loading-${index}`} />
                     ))}
                   </div>
@@ -624,7 +619,11 @@ const ProductListing = () => {
               </>
             ) : (
               <div className="text-center py-12">
-                <div className="text-4xl mb-4">🔍</div>
+                <img 
+                  src="/images/Screenshot 2026-01-24 at 6.53.23PM.png" 
+                  alt="No products" 
+                  className="w-32 h-32 mx-auto mb-4 rounded-full object-cover opacity-50"
+                />
                 <h3 className="text-lg font-bold text-text-dark mb-3">No products found</h3>
                 <p className="text-gray-600 mb-6">Try adjusting your filters</p>
                 <button onClick={resetFilters} className="bg-primary-maroon text-white px-6 py-2 rounded-lg">

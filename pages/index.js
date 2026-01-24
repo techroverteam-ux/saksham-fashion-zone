@@ -423,82 +423,92 @@ const HomePage = () => {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {featuredProducts.map((product) => (
-              <div key={product.id} className="product-card">
-                <div className="relative">
+              <div key={product.id} className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100">
+                <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
                   <img 
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-80 object-cover rounded-t-xl"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     loading="lazy"
                   />
                   
-                  {/* Enhanced Badges */}
-                  <div className="absolute top-4 left-4">
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  {/* Badges */}
+                  <div className="absolute top-4 left-4 z-10">
                     <MarketingTags badges={product.badges} />
                   </div>
                   
                   {/* Discount Badge */}
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold glow-maroon">
+                  <div className="absolute top-4 right-4 z-10">
+                    <div className="bg-red-500 text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-lg">
                       {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
-                    </span>
+                    </div>
                   </div>
                   
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                    <div className="space-y-3">
-                      <button className="btn-gold w-full">Quick View</button>
-                      <button className="btn-primary w-full">Add to Cart</button>
-                    </div>
+                  {/* Wishlist Button */}
+                  <button className="absolute top-4 right-16 z-10 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-110">
+                    <Heart className="w-5 h-5 text-gray-600 hover:text-red-500" />
+                  </button>
+                  
+                  {/* Quick Add Button */}
+                  <div className="absolute bottom-4 left-4 right-4 z-10 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                    <button 
+                      onClick={() => addToCart({
+                        id: product.id,
+                        name: product.name,
+                        discountedPrice: product.discountedPrice,
+                        originalPrice: product.originalPrice,
+                        fabric: product.fabric,
+                        occasion: product.occasion,
+                        category: product.name.includes('Saree') ? 'Sarees' : 'Blouses'
+                      })}
+                      className="w-full bg-primary-maroon text-white py-3 px-4 rounded-xl font-semibold hover:bg-deep-maroon transition-colors duration-300 shadow-lg backdrop-blur-sm"
+                    >
+                      Add to Cart
+                    </button>
                   </div>
                 </div>
                 
-                <div className="p-6 space-y-4">
-                  <div className="flex justify-between items-start">
-                    <h3 className="text-xl font-semibold text-text-dark group-hover:text-primary-maroon transition-colors">
+                <div className="p-5">
+                  <div className="mb-3">
+                    <h3 className="font-semibold text-gray-900 text-lg leading-tight line-clamp-2 group-hover:text-primary-maroon transition-colors duration-300">
                       {product.name}
                     </h3>
+                    <p className="text-sm text-gray-500 mt-1">{product.fabric} • {product.occasion}</p>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 mb-3">
                     <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-royal-gold text-royal-gold" />
-                      <span className="text-sm font-medium">{product.rating}</span>
-                      <span className="text-xs text-gray-500">({product.reviews})</span>
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm font-medium text-gray-700">{product.rating}</span>
+                      <span className="text-sm text-gray-400">({product.reviews})</span>
                     </div>
                   </div>
                   
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Fabric: {product.fabric}</span>
-                    <span>Occasion: {product.occasion}</span>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl font-bold text-primary-maroon">
+                        ₹{product.discountedPrice.toLocaleString()}
+                      </span>
+                      <span className="text-sm text-gray-500 line-through">
+                        ₹{product.originalPrice.toLocaleString()}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-green-600 font-medium bg-green-50 px-2 py-1 rounded-lg">
+                        Save ₹{(product.originalPrice - product.discountedPrice).toLocaleString()}
+                      </span>
+                      <div className="flex items-center gap-1 text-xs text-gray-500">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span>In Stock</span>
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div className="flex items-center gap-4">
-                    <span className="text-2xl font-bold text-primary-maroon">
-                      ₹{product.discountedPrice.toLocaleString()}
-                    </span>
-                    <span className="text-lg text-gray-500 line-through">
-                      ₹{product.originalPrice.toLocaleString()}
-                    </span>
-                  </div>
-                  
-                  <div className="text-green-600 font-semibold">
-                    You Save ₹{(product.originalPrice - product.discountedPrice).toLocaleString()}
-                  </div>
-                  
-                  <button 
-                    onClick={() => addToCart({
-                      id: product.id,
-                      name: product.name,
-                      discountedPrice: product.discountedPrice,
-                      originalPrice: product.originalPrice,
-                      fabric: product.fabric,
-                      occasion: product.occasion,
-                      category: product.name.includes('Saree') ? 'Sarees' : 'Blouses'
-                    })}
-                    className="btn-primary w-full"
-                  >
-                    Add to Package
-                  </button>
                 </div>
               </div>
             ))}
