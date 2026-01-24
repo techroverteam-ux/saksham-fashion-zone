@@ -1,0 +1,151 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Royal Banarasi Silk Saree",
+      "description": "Exquisite handwoven Banarasi silk saree with intricate gold zari work. Perfect for weddings and special occasions.",
+      "shortDescription": "Handwoven Banarasi silk with gold zari",
+      "category": "Sarees",
+      "subCategory": "Banarasi Sarees",
+      "collection": "Bridal Collection",
+      "fabric": "Banarasi Silk",
+      "occasion": "Wedding",
+      "originalPrice": 12000,
+      "discountedPrice": 9749,
+      "rating": 4.8,
+      "reviews": 45,
+      "reviewCount": 45,
+      "badges": ["Bestseller", "Premium"],
+      "features": ["Pure Silk", "Handwoven", "Gold Zari Work", "Traditional Design"],
+      "colors": [
+        {"name": "Red", "code": "RED", "hex": "#DC143C"},
+        {"name": "Maroon", "code": "MAROON", "hex": "#800000"}
+      ],
+      "image": "https://via.placeholder.com/400x500/8B0000/FFFFFF?text=Banarasi+Saree",
+      "stock": 15,
+      "isActive": true,
+      "isFeatured": true,
+      "comboEligible": true
+    },
+    {
+      "id": 2,
+      "name": "Designer Silk Blouse",
+      "description": "Elegant designer silk blouse with embroidered work. Matches perfectly with traditional sarees.",
+      "shortDescription": "Designer silk blouse with embroidery",
+      "category": "Blouses",
+      "subCategory": "Designer Blouses",
+      "collection": "Contemporary",
+      "fabric": "Pure Silk",
+      "occasion": "Party",
+      "originalPrice": 4000,
+      "discountedPrice": 3199,
+      "rating": 4.6,
+      "reviews": 32,
+      "reviewCount": 32,
+      "badges": ["New Arrival"],
+      "features": ["Silk Fabric", "Embroidered", "Designer Cut", "Perfect Fit"],
+      "colors": [
+        {"name": "Gold", "code": "GOLD", "hex": "#FFD700"},
+        {"name": "Silver", "code": "SILVER", "hex": "#C0C0C0"}
+      ],
+      "image": "https://via.placeholder.com/400x500/FFD700/000000?text=Silk+Blouse",
+      "stock": 25,
+      "isActive": true,
+      "isFeatured": true,
+      "comboEligible": true
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Priya Sharma",
+      "email": "priya.sharma@email.com",
+      "phone": "9876543210",
+      "password": "demo123",
+      "createdAt": "2024-01-01T10:00:00.000Z",
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "name": "Anjali Patel",
+      "email": "anjali.patel@email.com",
+      "phone": "9123456789",
+      "password": "demo123",
+      "createdAt": "2024-01-05T10:00:00.000Z",
+      "isActive": true
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Sarees",
+      "description": "Traditional and designer sarees",
+      "subCategories": ["Silk Sarees", "Cotton Sarees", "Georgette Sarees", "Banarasi Sarees", "Designer Sarees"],
+      "image": "",
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "name": "Blouses",
+      "description": "Designer and traditional blouses",
+      "subCategories": ["Silk Blouses", "Cotton Blouses", "Designer Blouses", "Embroidered Blouses", "Party Wear Blouses"],
+      "image": "",
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "name": "Lehengas",
+      "description": "Bridal and party lehengas",
+      "subCategories": ["Bridal Lehengas", "Party Lehengas", "Designer Lehengas", "Heavy Lehengas", "Light Lehengas"],
+      "image": "",
+      "isActive": true
+    },
+    {
+      "id": 4,
+      "name": "Suits",
+      "description": "Traditional and modern suits",
+      "subCategories": ["Anarkali Suits", "Straight Suits", "Palazzo Suits", "Sharara Suits", "Designer Suits"],
+      "image": "",
+      "isActive": true
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD001",
+      "customerName": "Priya Sharma",
+      "email": "priya.sharma@email.com",
+      "phone": "9876543210",
+      "items": [
+        {
+          "name": "Royal Banarasi Silk Saree",
+          "price": 9749,
+          "quantity": 1
+        }
+      ],
+      "total": 9749,
+      "paymentStatus": "Paid",
+      "deliveryStatus": "Shipped",
+      "orderDate": "2024-01-15",
+      "address": "Mumbai, Maharashtra"
+    }
+  ],
+  "filterOptions": {
+    "categories": ["Sarees", "Blouses", "Lehengas", "Suits"],
+    "subCategories": {
+      "Sarees": ["Silk Sarees", "Cotton Sarees", "Georgette Sarees", "Banarasi Sarees", "Designer Sarees"],
+      "Blouses": ["Silk Blouses", "Cotton Blouses", "Designer Blouses", "Embroidered Blouses", "Party Wear Blouses"],
+      "Lehengas": ["Bridal Lehengas", "Party Lehengas", "Designer Lehengas", "Heavy Lehengas", "Light Lehengas"],
+      "Suits": ["Anarkali Suits", "Straight Suits", "Palazzo Suits", "Sharara Suits", "Designer Suits"]
+    },
+    "collections": ["Bridal Collection", "Party Wear", "Traditional", "Contemporary", "Festive", "Casual"],
+    "fabrics": ["Pure Silk", "Cotton Silk", "Georgette", "Chiffon", "Banarasi Silk", "Cotton", "Velvet", "Net", "Satin", "Crepe"],
+    "occasions": ["Wedding", "Party", "Festival", "Casual", "Office", "Traditional", "Modern"],
+    "colors": ["Red", "Blue", "Green", "Pink", "Purple", "Orange", "Yellow", "Maroon", "Navy", "Black", "White", "Gold", "Silver", "Cream"],
+    "priceRanges": [
+      {"label": "Under ₹2,000", "min": 0, "max": 2000},
+      {"label": "₹2,000 - ₹5,000", "min": 2000, "max": 5000},
+      {"label": "₹5,000 - ₹10,000", "min": 5000, "max": 10000},
+      {"label": "Above ₹10,000", "min": 10000, "max": 999999}
+    ]
+  }
+}

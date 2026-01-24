@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminLogin from '../components/AdminLogin';
 import AdminSidebar from '../components/AdminSidebar';
 import EnhancedProductManagement from '../components/EnhancedProductManagement';
+import AdvancedProductManagement from '../components/AdvancedProductManagement';
 import OrderManagement from '../components/OrderManagement';
 import InventoryManagement from '../components/InventoryManagement';
 import DeliveryManagement from '../components/DeliveryManagement';
@@ -178,7 +179,7 @@ const AdminPortal = () => {
       case 'dashboard':
         return <DashboardOverview downloadPDF={downloadPDF} downloadExcel={downloadExcel} setActiveMenu={setActiveMenu} showToast={showToast} />;
       case 'products':
-        return <ProductsManagement downloadPDF={downloadPDF} downloadExcel={downloadExcel} showToast={showToast} />;
+        return <AdvancedProductManagement showToast={showToast} />;
       case 'orders':
         return <OrdersManagement downloadPDF={downloadPDF} downloadExcel={downloadExcel} showToast={showToast} />;
       case 'inventory':

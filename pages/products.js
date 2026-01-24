@@ -179,7 +179,7 @@ const ProductListing = () => {
   };
 
   const ProductCard = ({ product }) => {
-    const [selectedColor, setSelectedColor] = useState(product.selectedColor);
+    const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || {name: 'Default', code: 'DEFAULT', hex: '#000000'});
     const [quantity, setQuantity] = useState(1);
     
     const handleQuantityChange = (newQuantity) => {
@@ -245,16 +245,16 @@ const ProductListing = () => {
         {/* Color Selector */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-600">Color: {selectedColor.name}</span>
-            <span className="text-xs text-gray-500">{product.colors.length} colors</span>
+            <span className="text-xs font-medium text-gray-600">Color: {selectedColor?.name || 'Default'}</span>
+            <span className="text-xs text-gray-500">{product.colors?.length || 0} colors</span>
           </div>
           <div className="flex gap-1 flex-wrap">
-            {product.colors.map((color, index) => (
+            {product.colors?.map((color, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedColor(color)}
                 className={`w-6 h-6 rounded-full border-2 transition-all ${
-                  selectedColor.code === color.code 
+                  selectedColor?.code === color.code 
                     ? 'border-primary-maroon scale-110 shadow-md' 
                     : 'border-gray-300 hover:border-gray-400'
                 }`}
@@ -265,7 +265,7 @@ const ProductListing = () => {
                   <div className="w-full h-full rounded-full border border-gray-200"></div>
                 )}
               </button>
-            ))}
+            )) || []}
           </div>
         </div>
         

@@ -78,8 +78,27 @@ const Contact = () => {
 
           <div className="card p-3 sm:p-4">
             <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Store Location</h3>
-            <div className="bg-gray-200 h-48 sm:h-64 lg:h-80 rounded-lg flex items-center justify-center">
-              <p className="text-gray-600 text-sm sm:text-base">Interactive Map Placeholder</p>
+            <div className="bg-gray-200 h-48 sm:h-64 lg:h-80 rounded-lg overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3581.5234567890123!2d74.6234567890123!3d26.1234567890123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sMerta%20Road%2C%20Sadar%20Bazar%2C%20Rajasthan!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Saksham Fashion Zone Location"
+              ></iframe>
+            </div>
+            <div className="mt-3 text-center">
+              <a 
+                href="https://maps.google.com/?q=Merta+Road+Sadar+Bazar+Rajasthan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-maroon hover:underline text-sm"
+              >
+                Open in Google Maps
+              </a>
             </div>
           </div>
         </div>

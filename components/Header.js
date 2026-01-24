@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Phone, Menu, X, ShoppingBag, Sparkles, User, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const Header = ({ cartCount = 0 }) => {
+const Header = ({ cartCount = 0, transparent = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, setShowAuth, setAuthMode, logout } = useAuth();
 
@@ -13,7 +13,7 @@ const Header = ({ cartCount = 0 }) => {
   };
 
   return (
-    <header className="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-royal-gold/20">
+    <header className={`${transparent ? 'bg-transparent backdrop-blur-sm absolute top-0 left-0 right-0 z-50' : 'bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-royal-gold/20'}`}>
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-3">
@@ -26,36 +26,36 @@ const Header = ({ cartCount = 0 }) => {
               </div>
             </div>
             <div>
-              <div className="text-lg sm:text-xl font-bold text-primary-maroon">Saksham Fashion Zone</div>
-              <div className="text-xs text-royal-gold font-medium hidden sm:block">Where Elegance Meets Tradition</div>
+              <div className={`text-lg sm:text-xl font-bold ${transparent ? 'text-white drop-shadow-lg' : 'text-primary-maroon'}`}>Saksham Fashion Zone</div>
+              <div className={`text-xs font-medium hidden sm:block drop-shadow ${transparent ? 'text-white/90' : 'text-royal-gold'}`}>Where Elegance Meets Tradition</div>
             </div>
           </Link>
           
           <nav className="hidden md:flex space-x-8">
-            <Link href="/" className="nav-link group">
+            <Link href="/" className={`nav-link group ${transparent ? 'text-white hover:text-white/80' : 'text-text-dark hover:text-primary-maroon'}`}>
               <span>Home</span>
-              <div className="nav-underline"></div>
+              <div className={`nav-underline ${transparent ? 'bg-white' : 'bg-primary-maroon'}`}></div>
             </Link>
-            <Link href="/products" className="nav-link group">
+            <Link href="/products" className={`nav-link group ${transparent ? 'text-white hover:text-white/80' : 'text-text-dark hover:text-primary-maroon'}`}>
               <span>Collection</span>
-              <div className="nav-underline"></div>
+              <div className={`nav-underline ${transparent ? 'bg-white' : 'bg-primary-maroon'}`}></div>
             </Link>
-            <Link href="/offers" className="nav-link group">
+            <Link href="/offers" className={`nav-link group ${transparent ? 'text-white hover:text-white/80' : 'text-text-dark hover:text-primary-maroon'}`}>
               <span>Offers</span>
-              <div className="nav-underline"></div>
+              <div className={`nav-underline ${transparent ? 'bg-white' : 'bg-primary-maroon'}`}></div>
             </Link>
-            <Link href="/about" className="nav-link group">
+            <Link href="/about" className={`nav-link group ${transparent ? 'text-white hover:text-white/80' : 'text-text-dark hover:text-primary-maroon'}`}>
               <span>About</span>
-              <div className="nav-underline"></div>
+              <div className={`nav-underline ${transparent ? 'bg-white' : 'bg-primary-maroon'}`}></div>
             </Link>
-            <Link href="/contact" className="nav-link group">
+            <Link href="/contact" className={`nav-link group ${transparent ? 'text-white hover:text-white/80' : 'text-text-dark hover:text-primary-maroon'}`}>
               <span>Contact</span>
-              <div className="nav-underline"></div>
+              <div className={`nav-underline ${transparent ? 'bg-white' : 'bg-primary-maroon'}`}></div>
             </Link>
           </nav>
           
           <div className="flex items-center space-x-4">
-            <Link href="/cart" className="relative p-2 text-primary-maroon hover:bg-primary-maroon/10 rounded-lg transition-colors">
+            <Link href="/cart" className={`relative p-2 rounded-lg transition-colors ${transparent ? 'text-white hover:bg-white/10' : 'text-primary-maroon hover:bg-primary-maroon/10'}`}>
               <ShoppingBag className="w-6 h-6" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -67,12 +67,12 @@ const Header = ({ cartCount = 0 }) => {
             {user ? (
               <div className="flex items-center space-x-3">
                 <div className="hidden sm:flex items-center space-x-2">
-                  <User className="w-5 h-5 text-primary-maroon" />
-                  <span className="text-sm font-medium text-text-dark">{user.name}</span>
+                  <User className={`w-5 h-5 ${transparent ? 'text-white' : 'text-primary-maroon'}`} />
+                  <span className={`text-sm font-medium ${transparent ? 'text-white' : 'text-text-dark'}`}>{user.name}</span>
                 </div>
                 <button 
                   onClick={logout}
-                  className="p-2 text-primary-maroon hover:bg-primary-maroon/10 rounded-lg transition-colors"
+                  className={`p-2 rounded-lg transition-colors ${transparent ? 'text-white hover:bg-white/10' : 'text-primary-maroon hover:bg-primary-maroon/10'}`}
                   title="Logout"
                 >
                   <LogOut className="w-5 h-5" />
@@ -82,7 +82,7 @@ const Header = ({ cartCount = 0 }) => {
               <div className="hidden sm:flex items-center space-x-2">
                 <button 
                   onClick={() => handleAuthClick('login')}
-                  className="text-primary-maroon hover:bg-primary-maroon/10 px-3 py-2 rounded-lg transition-colors font-medium"
+                  className={`px-3 py-2 rounded-lg transition-colors font-medium ${transparent ? 'text-white hover:bg-white/10' : 'text-primary-maroon hover:bg-primary-maroon/10'}`}
                 >
                   Login
                 </button>
@@ -103,7 +103,7 @@ const Header = ({ cartCount = 0 }) => {
             
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-primary-maroon hover:bg-primary-maroon/10 rounded-lg transition-colors"
+              className={`md:hidden p-2 rounded-lg transition-colors ${transparent ? 'text-white hover:bg-white/10' : 'text-primary-maroon hover:bg-primary-maroon/10'}`}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>

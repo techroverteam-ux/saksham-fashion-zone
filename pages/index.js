@@ -48,6 +48,11 @@ const HomePage = () => {
   useEffect(() => {
     // Simulate loading
     setTimeout(() => setLoading(false), 1500);
+    
+    // Force refresh with latest products from static data
+    localStorage.setItem('admin-products', JSON.stringify(productsData.products));
+    localStorage.setItem('saksham-products', JSON.stringify(productsData));
+    setFeaturedProducts(productsData.products);
   }, []);
 
   useEffect(() => {
@@ -102,68 +107,7 @@ const HomePage = () => {
     }
   ];
 
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "Royal Banarasi Silk Saree",
-      originalPrice: 12999,
-      discountedPrice: 9749,
-      image: "https://sudathi.com/cdn/shop/files/4953S1261_6.JPG?v=1766147381&width=750",
-      badges: ["Inauguration Special", "Bestseller"],
-      fabric: "Pure Silk",
-      occasion: "Wedding",
-      rating: 4.8,
-      reviews: 156
-    },
-    {
-      id: 2,
-      name: "Designer Embroidered Blouse",
-      originalPrice: 3999,
-      discountedPrice: 2999,
-      image: "https://sudathi.com/cdn/shop/files/MouniroyXSudathi_trust_b19b5aa5-4ed2-45a2-aa71-a7967634bf9f.jpg?v=1766147381&width=750", 
-      badges: ["New Arrival", "Hot Deal"],
-      fabric: "Silk Blend",
-      occasion: "Party",
-      rating: 4.6,
-      reviews: 89
-    },
-    {
-      id: 3,
-      name: "Bridal Lehenga Set",
-      originalPrice: 25999,
-      discountedPrice: 18199,
-      image: "https://sudathi.com/cdn/shop/files/4953S1261_1.JPGa?v=1766147381&width=750",
-      badges: ["Limited Edition", "Premium"], 
-      fabric: "Heavy Silk",
-      occasion: "Bridal",
-      rating: 4.9,
-      reviews: 234
-    },
-    {
-      id: 4,
-      name: "Festive Cotton Saree",
-      originalPrice: 4999,
-      discountedPrice: 3499,
-      image: "https://sudathi.com/cdn/shop/files/4953S1261_6.JPG?v=1766147381&width=750",
-      badges: ["Customer Favorite"],
-      fabric: "Cotton",
-      occasion: "Festival",
-      rating: 4.7,
-      reviews: 145
-    },
-    {
-      id: 5,
-      name: "Party Wear Blouse",
-      originalPrice: 2999,
-      discountedPrice: 2199,
-      image: "https://sudathi.com/cdn/shop/files/MouniroyXSudathi_trust_b19b5aa5-4ed2-45a2-aa71-a7967634bf9f.jpg?v=1766147381&width=750",
-      badges: ["New Arrival"],
-      fabric: "Georgette",
-      occasion: "Party",
-      rating: 4.5,
-      reviews: 98
-    }
-  ];
+  const [featuredProducts, setFeaturedProducts] = useState([]);
 
   return (
     <ErrorBoundary>
@@ -194,11 +138,8 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* Marketing Banner */}
-        <MarketingBanner />
-
         {/* Header */}
-        <Header cartCount={getCartCount()} />
+        <Header cartCount={getCartCount()} transparent={true} />
 
         {loading ? (
           <>
@@ -211,32 +152,18 @@ const HomePage = () => {
 
       {/* Hero Banner */}
       <section className="relative h-screen bg-gradient-to-br from-primary-maroon via-deep-maroon to-primary-maroon text-white overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 fabric-texture opacity-20"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="/images/homepage.jpeg" 
+            alt="Saksham Fashion Zone" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
         
-        <div className="relative z-10 h-full flex items-center justify-center px-4">
+        <div className="relative z-10 h-full flex items-end justify-center px-4 pb-20">
           <div className="text-center w-full max-w-6xl mx-auto">
-            {/* Status Badge */}
-            <div className="inline-flex items-center bg-green-500/20 backdrop-blur-sm border border-green-400/30 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-6 sm:mb-8">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full mr-2 sm:mr-3 animate-pulse"></div>
-              <span className="text-green-100 font-semibold text-sm sm:text-base">We're Open! Grand Inauguration Complete</span>
-            </div>
-            
-            {/* Main Content */}
-            <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
-              <span className="block text-royal-gold shimmer">Saksham</span>
-              <span className="block">Fashion Zone</span>
-            </h1>
-            
-            <p className="text-lg sm:text-xl lg:text-2xl mb-3 sm:mb-4 text-royal-gold font-light">
-              Where Elegance Meets Tradition
-            </p>
-            
-            <p className="text-base sm:text-lg lg:text-xl mb-8 sm:mb-12 opacity-90 max-w-3xl mx-auto px-4">
-              Experience the finest collection of Sarees & Blouses with authentic craftsmanship
-            </p>
-            
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-8 sm:mb-12 px-4">
               <Link href="/products" className="hero-btn-primary group w-full sm:w-auto">
@@ -299,20 +226,27 @@ const HomePage = () => {
           </div>
           
           {/* Main Categories */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
             <div className="group cursor-pointer">
               <Link href="/products?category=Sarees">
                 <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-                  <div className="h-48 md:h-64 bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white relative">
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="relative z-10 text-center p-4 md:p-6">
-                      <h3 className="text-lg md:text-2xl font-bold mb-2">Sarees</h3>
-                      <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">Traditional & Designer</p>
-                      <div className="text-xs md:text-sm opacity-80">
-                        Banarasi • Silk • Cotton • Georgette
-                      </div>
-                      <div className="mt-2 md:mt-4 text-sm md:text-lg font-semibold">
-                        {productsData.products.filter(p => p.category === 'Sarees').length}+ Items
+                  <div className="h-48 md:h-64 relative">
+                    <img 
+                      src={featuredProducts.find(p => p.category === 'Sarees')?.image || '/images/WhatsApp Image 2026-01-24 at 20.58.26.jpeg'}
+                      alt="Sarees"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-rose-500/80 to-pink-600/80"></div>
+                    <div className="absolute inset-0 flex items-center justify-center text-white">
+                      <div className="text-center p-4 md:p-6">
+                        <h3 className="text-lg md:text-2xl font-bold mb-2">Sarees</h3>
+                        <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">Traditional & Designer</p>
+                        <div className="text-xs md:text-sm opacity-80">
+                          Banarasi • Silk • Cotton • Georgette
+                        </div>
+                        <div className="mt-2 md:mt-4 text-sm md:text-lg font-semibold">
+                          {featuredProducts.filter(p => p.category === 'Sarees').length}+ Items
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -323,16 +257,23 @@ const HomePage = () => {
             <div className="group cursor-pointer">
               <Link href="/products?category=Blouses">
                 <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-                  <div className="h-48 md:h-64 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white relative">
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="relative z-10 text-center p-4 md:p-6">
-                      <h3 className="text-lg md:text-2xl font-bold mb-2">Blouses</h3>
-                      <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">Designer & Traditional</p>
-                      <div className="text-xs md:text-sm opacity-80">
-                        Embroidered • Silk • Cotton • Party Wear
-                      </div>
-                      <div className="mt-2 md:mt-4 text-sm md:text-lg font-semibold">
-                        {productsData.products.filter(p => p.category === 'Blouses').length}+ Items
+                  <div className="h-48 md:h-64 relative">
+                    <img 
+                      src={featuredProducts.find(p => p.category === 'Blouses')?.image || '/images/WhatsApp Image 2026-01-24 at 20.58.27.jpeg'}
+                      alt="Blouses"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/80 to-indigo-600/80"></div>
+                    <div className="absolute inset-0 flex items-center justify-center text-white">
+                      <div className="text-center p-4 md:p-6">
+                        <h3 className="text-lg md:text-2xl font-bold mb-2">Blouses</h3>
+                        <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">Designer & Traditional</p>
+                        <div className="text-xs md:text-sm opacity-80">
+                          Embroidered • Silk • Cotton • Party Wear
+                        </div>
+                        <div className="mt-2 md:mt-4 text-sm md:text-lg font-semibold">
+                          {featuredProducts.filter(p => p.category === 'Blouses').length}+ Items
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -343,16 +284,50 @@ const HomePage = () => {
             <div className="group cursor-pointer">
               <Link href="/products?category=Lehengas">
                 <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-                  <div className="h-48 md:h-64 bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white relative">
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    <div className="relative z-10 text-center p-4 md:p-6">
-                      <h3 className="text-lg md:text-2xl font-bold mb-2">Lehengas</h3>
-                      <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">Bridal & Party</p>
-                      <div className="text-xs md:text-sm opacity-80">
-                        Heavy Silk • Designer • Bridal
+                  <div className="h-48 md:h-64 relative">
+                    <img 
+                      src={featuredProducts.find(p => p.category === 'Lehengas')?.image || '/images/WhatsApp Image 2026-01-24 at 20.58.28.jpeg'}
+                      alt="Lehengas"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/80 to-teal-600/80"></div>
+                    <div className="absolute inset-0 flex items-center justify-center text-white">
+                      <div className="text-center p-4 md:p-6">
+                        <h3 className="text-lg md:text-2xl font-bold mb-2">Lehengas</h3>
+                        <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">Bridal & Party</p>
+                        <div className="text-xs md:text-sm opacity-80">
+                          Heavy Silk • Designer • Bridal
+                        </div>
+                        <div className="mt-2 md:mt-4 text-sm md:text-lg font-semibold">
+                          {featuredProducts.filter(p => p.category === 'Lehengas').length}+ Items
+                        </div>
                       </div>
-                      <div className="mt-2 md:mt-4 text-sm md:text-lg font-semibold">
-                        {productsData.products.filter(p => p.category === 'Lehengas').length}+ Items
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </div>
+            
+            <div className="group cursor-pointer">
+              <Link href="/products?category=Suits">
+                <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                  <div className="h-48 md:h-64 relative">
+                    <img 
+                      src={featuredProducts.find(p => p.category === 'Suits')?.image || '/images/WhatsApp Image 2026-01-24 at 20.58.29.jpeg'}
+                      alt="Suits"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/80 to-orange-600/80"></div>
+                    <div className="absolute inset-0 flex items-center justify-center text-white">
+                      <div className="text-center p-4 md:p-6">
+                        <h3 className="text-lg md:text-2xl font-bold mb-2">Suits</h3>
+                        <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">Anarkali & Palazzo</p>
+                        <div className="text-xs md:text-sm opacity-80">
+                          Georgette • Crepe • Designer • Modern
+                        </div>
+                        <div className="mt-2 md:mt-4 text-sm md:text-lg font-semibold">
+                          {featuredProducts.filter(p => p.category === 'Suits').length}+ Items
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -364,14 +339,14 @@ const HomePage = () => {
           {/* Sub Categories */}
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { name: 'Banarasi Sarees', count: productsData.products.filter(p => p.fabric === 'Banarasi Silk' && p.category === 'Sarees').length },
-              { name: 'Silk Blouses', count: productsData.products.filter(p => p.fabric === 'Pure Silk' && p.category === 'Blouses').length },
-              { name: 'Cotton Sarees', count: productsData.products.filter(p => p.fabric === 'Cotton' && p.category === 'Sarees').length },
-              { name: 'Party Wear', count: productsData.products.filter(p => p.occasion === 'Party').length },
-              { name: 'Bridal Collection', count: productsData.products.filter(p => p.collection === 'Bridal Collection').length },
-              { name: 'Festive Wear', count: productsData.products.filter(p => p.occasion === 'Festival').length },
-              { name: 'Casual Wear', count: productsData.products.filter(p => p.occasion === 'Casual').length },
-              { name: 'Designer Pieces', count: productsData.products.filter(p => p.collection === 'Contemporary').length }
+              { name: 'Banarasi Sarees', count: featuredProducts.filter(p => p.fabric === 'Banarasi Silk' && p.category === 'Sarees').length },
+              { name: 'Silk Blouses', count: featuredProducts.filter(p => p.fabric === 'Pure Silk' && p.category === 'Blouses').length },
+              { name: 'Cotton Sarees', count: featuredProducts.filter(p => p.fabric === 'Cotton' && p.category === 'Sarees').length },
+              { name: 'Party Wear', count: featuredProducts.filter(p => p.occasion === 'Party').length },
+              { name: 'Bridal Collection', count: featuredProducts.filter(p => p.collection === 'Bridal Collection').length },
+              { name: 'Festive Wear', count: featuredProducts.filter(p => p.occasion === 'Festival').length },
+              { name: 'Casual Wear', count: featuredProducts.filter(p => p.occasion === 'Casual').length },
+              { name: 'Designer Pieces', count: featuredProducts.filter(p => p.collection === 'Contemporary').length }
             ].map((item, index) => (
               <Link 
                 key={index} 
@@ -394,32 +369,45 @@ const HomePage = () => {
 
       {/* Marketing Carousels */}
       <section className="py-16 bg-gradient-to-br from-soft-beige/30 to-ivory-white">
-        <div className="w-full px-2 space-y-4">
-          {/* Trending Now - Horizontal Scroll */}
-          <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-3 md:p-4 text-white">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                <span className="text-lg">✨</span>
+        <div className="w-full px-2 space-y-8">
+          {/* Trending Now */}
+          <div className="">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                <span className="text-lg text-white">✨</span>
               </div>
-              <h3 className="text-lg md:text-xl font-bold">Trending Now</h3>
+              <h3 className="text-2xl font-bold text-text-dark">Trending Now</h3>
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-              {featuredProducts.slice(0, 6).map((product) => (
-                <div key={product.id} className="flex-shrink-0 w-28 md:w-32">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 hover:bg-white/20 transition-colors">
-                    <div className="aspect-square overflow-hidden rounded mb-2">
-                      <img 
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {featuredProducts.filter(p => p.badges?.includes('Trending')).slice(0, 4).map((product) => (
+                <div key={product.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                  <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
+                    <img 
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/300x400/8B0000/FFFFFF?text=Product';
+                      }}
+                    />
+                    <div className="absolute top-2 left-2">
+                      <MarketingTags badges={product.badges} />
                     </div>
-                    <h4 className="text-xs font-semibold line-clamp-2 mb-1">{product.name}</h4>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold">₹{product.discountedPrice.toLocaleString()}</span>
-                      <span className="text-xs bg-red-500 px-1 py-0.5 rounded">
+                    <div className="absolute top-2 right-2">
+                      <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                         {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
-                      </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h4 className="font-semibold text-sm mb-2 line-clamp-2">{product.name}</h4>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      <span className="text-xs">{product.rating}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-primary-maroon">₹{product.discountedPrice?.toLocaleString()}</span>
+                      <span className="text-xs text-gray-500 line-through">₹{product.originalPrice?.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
@@ -427,62 +415,100 @@ const HomePage = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {/* Bestsellers Section */}
-            <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-3 text-white">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                  <span className="text-lg">🏆</span>
-                </div>
-                <h3 className="text-lg font-bold">Bestsellers</h3>
+          {/* Bestsellers */}
+          <div className="">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                <span className="text-lg text-white">🏆</span>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                {featuredProducts.filter(p => p.badges?.includes('Bestseller')).slice(0, 4).map((product) => (
-                  <div key={product.id} className="bg-white/10 backdrop-blur-sm rounded-lg p-2 hover:bg-white/20 transition-colors">
-                    <div className="aspect-square overflow-hidden rounded mb-2">
-                      <img 
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <h4 className="text-xs font-semibold line-clamp-1 mb-1">{product.name}</h4>
-                    <div className="text-xs font-bold">₹{product.discountedPrice.toLocaleString()}</div>
-                  </div>
-                ))}
-              </div>
+              <h3 className="text-2xl font-bold text-text-dark">Bestsellers</h3>
             </div>
-            
-            {/* New Arrivals Section */}
-            <div className="bg-gradient-to-br from-green-400 to-blue-500 rounded-2xl p-3 text-white">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                  <span className="text-lg">🆕</span>
-                </div>
-                <h3 className="text-lg font-bold">New Arrivals</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {featuredProducts.filter(p => p.badges?.includes('New Arrival')).slice(0, 4).map((product) => (
-                  <div key={product.id} className="bg-white/10 backdrop-blur-sm rounded-lg p-2 hover:bg-white/20 transition-colors">
-                    <div className="aspect-square overflow-hidden rounded mb-2">
-                      <img 
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {featuredProducts.filter(p => p.badges?.includes('Bestseller')).slice(0, 4).map((product) => (
+                <div key={product.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                  <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
+                    <img 
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/300x400/8B0000/FFFFFF?text=Product';
+                      }}
+                    />
+                    <div className="absolute top-2 left-2">
+                      <MarketingTags badges={product.badges} />
                     </div>
-                    <h4 className="text-xs font-semibold line-clamp-1 mb-1">{product.name}</h4>
-                    <div className="text-xs font-bold">₹{product.discountedPrice.toLocaleString()}</div>
+                    <div className="absolute top-2 right-2">
+                      <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                        {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
+                      </div>
+                    </div>
                   </div>
-                ))}
+                  <div className="p-4">
+                    <h4 className="font-semibold text-sm mb-2 line-clamp-2">{product.name}</h4>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      <span className="text-xs">{product.rating}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-primary-maroon">₹{product.discountedPrice?.toLocaleString()}</span>
+                      <span className="text-xs text-gray-500 line-through">₹{product.originalPrice?.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* New Arrivals */}
+          <div className="">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <span className="text-lg text-white">🆕</span>
               </div>
+              <h3 className="text-2xl font-bold text-text-dark">New Arrivals</h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {featuredProducts.filter(p => p.badges?.includes('New Arrival')).slice(0, 4).map((product) => (
+                <div key={product.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                  <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
+                    <img 
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/300x400/8B0000/FFFFFF?text=Product';
+                      }}
+                    />
+                    <div className="absolute top-2 left-2">
+                      <MarketingTags badges={product.badges} />
+                    </div>
+                    <div className="absolute top-2 right-2">
+                      <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                        {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h4 className="font-semibold text-sm mb-2 line-clamp-2">{product.name}</h4>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      <span className="text-xs">{product.rating}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-primary-maroon">₹{product.discountedPrice?.toLocaleString()}</span>
+                      <span className="text-xs text-gray-500 line-through">₹{product.originalPrice?.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Products */}
-      <section className="py-20 bg-ivory-white">
+      <section className="py-8 bg-ivory-white">
         <div className="w-full px-2">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-text-dark mb-6">
