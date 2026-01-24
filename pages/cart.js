@@ -117,7 +117,7 @@ const CartPage = () => {
                         return productData?.image || '/images/Screenshot 2026-01-24 at 6.53.02PM.png';
                       })()} 
                       alt={item.name}
-                      className="w-20 h-24 object-cover rounded-lg border"
+                      className="w-32 h-40 object-cover rounded-lg border"
                     />
                     
                     <div className="flex-1">

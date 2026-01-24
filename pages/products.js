@@ -211,9 +211,12 @@ const ProductListing = () => {
       
       <div className="relative">
         <img 
-          src={selectedColor.hex === '#FFFFFF' ? product.image : product.image}
+          src={product.image}
           alt={product.name}
-          className="w-full h-48 object-cover rounded-t-xl"
+          className="w-full h-64 object-cover rounded-t-xl"
+          onError={(e) => {
+            e.target.src = '/images/Screenshot 2026-01-24 at 6.53.02PM.png';
+          }}
         />
         
         <div className="absolute top-3 left-3">
@@ -588,21 +591,21 @@ const ProductListing = () => {
             
             {/* Products Grid */}
             {loading ? (
-              <div className={`grid gap-4 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'}`}>
+              <div className={`grid gap-4 ${viewMode === 'grid' ? 'grid-cols-3' : 'grid-cols-1'}`}>
                 {Array(30).fill(0).map((_, index) => (
                   <ProductSkeleton key={index} />
                 ))}
               </div>
             ) : displayedProducts.length > 0 ? (
               <>
-                <div className={`grid gap-4 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'}`}>
+                <div className={`grid gap-4 ${viewMode === 'grid' ? 'grid-cols-3' : 'grid-cols-1'}`}>
                   {displayedProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
                 
                 {loadingMore && (
-                  <div className={`grid gap-4 mt-4 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'}`}>
+                  <div className={`grid gap-4 mt-4 ${viewMode === 'grid' ? 'grid-cols-3' : 'grid-cols-1'}`}>
                     {Array(30).fill(0).map((_, index) => (
                       <ProductSkeleton key={`loading-${index}`} />
                     ))}

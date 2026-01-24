@@ -9,6 +9,7 @@ import UniqueCarousel from '../components/UniqueCarousel';
 import MarketingTags from '../components/MarketingTags';
 import MarketingBanner from '../components/MarketingBanner';
 import UserAuth from '../components/UserAuth';
+import productsData from '../data/products.js';
 
 const HomePage = () => {
   const { getCartCount, addToCart } = useCart();
@@ -17,6 +18,7 @@ const HomePage = () => {
   const [showUserAuth, setShowUserAuth] = useState(false);
   const [userAuthMode, setUserAuthMode] = useState('login');
   const [currentUser, setCurrentUser] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -270,7 +272,7 @@ const HomePage = () => {
       {/* Trust Badges */}
       <section className="py-16 bg-white relative">
         <div className="absolute inset-0 bg-gradient-to-r from-soft-beige/50 via-white to-soft-beige/50"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4">
+        <div className="relative z-10 max-w-full mx-auto px-2">
           <div className="grid md:grid-cols-3 gap-8">
             {trustBadges.map((badge, index) => (
               <div key={index} className="trust-badge text-center">
@@ -285,7 +287,7 @@ const HomePage = () => {
 
       {/* Collections Section */}
       <section className="py-12 sm:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="w-full px-2">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-text-dark mb-4">
               Our Collections
@@ -297,122 +299,177 @@ const HomePage = () => {
           </div>
           
           {/* Main Categories */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="group cursor-pointer" onClick={() => currentUser ? null : handleAuthClick('register')}>
-              <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-                <div className="h-64 bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white relative">
-                  <div className="absolute inset-0 bg-black/20"></div>
-                  <div className="relative z-10 text-center p-6">
-                    <h3 className="text-2xl font-bold mb-2">Sarees</h3>
-                    <p className="text-white/90 mb-4">Traditional & Designer</p>
-                    <div className="text-sm opacity-80">
-                      Banarasi • Silk • Cotton • Georgette
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="group cursor-pointer">
+              <Link href="/products?category=Sarees">
+                <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                  <div className="h-64 bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white relative">
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    <div className="relative z-10 text-center p-6">
+                      <h3 className="text-2xl font-bold mb-2">Sarees</h3>
+                      <p className="text-white/90 mb-4">Traditional & Designer</p>
+                      <div className="text-sm opacity-80">
+                        Banarasi • Silk • Cotton • Georgette
+                      </div>
+                      <div className="mt-4 text-lg font-semibold">
+                        {productsData.products.filter(p => p.category === 'Sarees').length}+ Items
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
             
-            <div className="group cursor-pointer" onClick={() => currentUser ? null : handleAuthClick('register')}>
-              <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-                <div className="h-64 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white relative">
-                  <div className="absolute inset-0 bg-black/20"></div>
-                  <div className="relative z-10 text-center p-6">
-                    <h3 className="text-2xl font-bold mb-2">Blouses</h3>
-                    <p className="text-white/90 mb-4">Designer & Traditional</p>
-                    <div className="text-sm opacity-80">
-                      Embroidered • Silk • Cotton • Party Wear
+            <div className="group cursor-pointer">
+              <Link href="/products?category=Blouses">
+                <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                  <div className="h-64 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white relative">
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    <div className="relative z-10 text-center p-6">
+                      <h3 className="text-2xl font-bold mb-2">Blouses</h3>
+                      <p className="text-white/90 mb-4">Designer & Traditional</p>
+                      <div className="text-sm opacity-80">
+                        Embroidered • Silk • Cotton • Party Wear
+                      </div>
+                      <div className="mt-4 text-lg font-semibold">
+                        {productsData.products.filter(p => p.category === 'Blouses').length}+ Items
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
             
-            <div className="group cursor-pointer" onClick={() => currentUser ? null : handleAuthClick('register')}>
-              <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-                <div className="h-64 bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white relative">
-                  <div className="absolute inset-0 bg-black/20"></div>
-                  <div className="relative z-10 text-center p-6">
-                    <h3 className="text-2xl font-bold mb-2">Lehengas</h3>
-                    <p className="text-white/90 mb-4">Bridal & Party</p>
-                    <div className="text-sm opacity-80">
-                      Heavy Silk • Designer • Bridal
+            <div className="group cursor-pointer">
+              <Link href="/products?category=Lehengas">
+                <div className="relative overflow-hidden rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                  <div className="h-64 bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white relative">
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    <div className="relative z-10 text-center p-6">
+                      <h3 className="text-2xl font-bold mb-2">Lehengas</h3>
+                      <p className="text-white/90 mb-4">Bridal & Party</p>
+                      <div className="text-sm opacity-80">
+                        Heavy Silk • Designer • Bridal
+                      </div>
+                      <div className="mt-4 text-lg font-semibold">
+                        {productsData.products.filter(p => p.category === 'Lehengas').length}+ Items
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
           
           {/* Sub Categories */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { name: 'Banarasi Sarees', count: '50+' },
-              { name: 'Silk Blouses', count: '30+' },
-              { name: 'Cotton Sarees', count: '40+' },
-              { name: 'Party Wear', count: '25+' },
-              { name: 'Bridal Collection', count: '20+' },
-              { name: 'Festive Wear', count: '35+' },
-              { name: 'Casual Wear', count: '45+' },
-              { name: 'Designer Pieces', count: '15+' }
+              { name: 'Banarasi Sarees', count: productsData.products.filter(p => p.fabric === 'Banarasi Silk' && p.category === 'Sarees').length },
+              { name: 'Silk Blouses', count: productsData.products.filter(p => p.fabric === 'Pure Silk' && p.category === 'Blouses').length },
+              { name: 'Cotton Sarees', count: productsData.products.filter(p => p.fabric === 'Cotton' && p.category === 'Sarees').length },
+              { name: 'Party Wear', count: productsData.products.filter(p => p.occasion === 'Party').length },
+              { name: 'Bridal Collection', count: productsData.products.filter(p => p.collection === 'Bridal Collection').length },
+              { name: 'Festive Wear', count: productsData.products.filter(p => p.occasion === 'Festival').length },
+              { name: 'Casual Wear', count: productsData.products.filter(p => p.occasion === 'Casual').length },
+              { name: 'Designer Pieces', count: productsData.products.filter(p => p.collection === 'Contemporary').length }
             ].map((item, index) => (
-              <div 
+              <Link 
                 key={index} 
+                href={`/products?filter=${encodeURIComponent(item.name.toLowerCase())}`}
                 className="bg-soft-beige rounded-xl p-4 text-center hover:bg-primary-maroon/10 transition-colors cursor-pointer"
-                onClick={() => currentUser ? null : handleAuthClick('register')}
               >
                 <h4 className="font-semibold text-text-dark mb-1">{item.name}</h4>
-                <p className="text-sm text-primary-maroon font-medium">{item.count} Items</p>
-              </div>
+                <p className="text-sm text-primary-maroon font-medium">{item.count}+ Items</p>
+              </Link>
             ))}
           </div>
           
           <div className="text-center mt-8">
-            <div className="bg-royal-gold/10 border border-royal-gold/30 rounded-xl p-6 max-w-md mx-auto">
-              <h3 className="text-xl font-bold text-primary-maroon mb-2">
-                {currentUser ? `Welcome, ${currentUser.name}!` : 'Sign Up to Explore'}
-              </h3>
-              <p className="text-gray-600 mb-4">
-                {currentUser ? 'Browse our full collection' : 'Create an account to browse our full collection'}
-              </p>
-              {currentUser ? (
-                <Link href="/products" className="bg-primary-maroon text-white px-6 py-3 rounded-lg font-semibold hover:bg-deep-maroon transition-colors">
-                  Browse Products
-                </Link>
-              ) : (
-                <button 
-                  onClick={() => handleAuthClick('register')}
-                  className="bg-primary-maroon text-white px-6 py-3 rounded-lg font-semibold hover:bg-deep-maroon transition-colors"
-                >
-                  Sign Up Now
-                </button>
-              )}
-            </div>
+            <Link href="/products" className="bg-primary-maroon text-white px-6 py-3 rounded-lg font-semibold hover:bg-deep-maroon transition-colors">
+              Browse All Products
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Marketing Carousels */}
       <section className="py-16 bg-gradient-to-br from-soft-beige/30 to-ivory-white">
-        <div className="max-w-7xl mx-auto px-4 space-y-12">
+        <div className="w-full px-2 space-y-12">
           <UniqueCarousel products={featuredProducts} title="✨ Trending Now" />
           
-          <div className="grid md:grid-cols-2 gap-8">
-            <UniqueCarousel 
-              products={featuredProducts.filter(p => p.badges?.includes('Bestseller'))} 
-              title="🏆 Bestsellers" 
-            />
-            <UniqueCarousel 
-              products={featuredProducts.filter(p => p.badges?.includes('New Arrival'))} 
-              title="🆕 New Arrivals" 
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Bestsellers Section */}
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
+              <div className="flex items-center gap-3 mb-4 md:mb-6">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                  <span className="text-xl md:text-2xl">🏆</span>
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-text-dark">Bestsellers</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-3 md:gap-4">
+                {featuredProducts.filter(p => p.badges?.includes('Bestseller')).slice(0, 4).map((product) => (
+                  <div key={product.id} className="group cursor-pointer">
+                    <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
+                      <img 
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute top-2 right-2">
+                        <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
+                        </span>
+                      </div>
+                    </div>
+                    <h4 className="font-semibold text-sm line-clamp-2 mb-1">{product.name}</h4>
+                    <div className="flex items-center gap-2">
+                      <span className="text-primary-maroon font-bold text-sm">₹{product.discountedPrice.toLocaleString()}</span>
+                      <span className="text-gray-400 line-through text-xs">₹{product.originalPrice.toLocaleString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* New Arrivals Section */}
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
+              <div className="flex items-center gap-3 mb-4 md:mb-6">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                  <span className="text-xl md:text-2xl">🆕</span>
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-text-dark">New Arrivals</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-3 md:gap-4">
+                {featuredProducts.filter(p => p.badges?.includes('New Arrival')).slice(0, 4).map((product) => (
+                  <div key={product.id} className="group cursor-pointer">
+                    <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
+                      <img 
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute top-2 right-2">
+                        <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
+                        </span>
+                      </div>
+                    </div>
+                    <h4 className="font-semibold text-sm line-clamp-2 mb-1">{product.name}</h4>
+                    <div className="flex items-center gap-2">
+                      <span className="text-primary-maroon font-bold text-sm">₹{product.discountedPrice.toLocaleString()}</span>
+                      <span className="text-gray-400 line-through text-xs">₹{product.originalPrice.toLocaleString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Featured Products */}
       <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="w-full px-2">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-text-dark mb-6">
               Handpicked for You
@@ -423,95 +480,112 @@ const HomePage = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {featuredProducts.map((product) => (
-              <div key={product.id} className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100">
-                <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
-                  <img 
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    loading="lazy"
-                  />
-                  
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
-                  {/* Badges */}
-                  <div className="absolute top-4 left-4 z-10">
-                    <MarketingTags badges={product.badges} />
-                  </div>
-                  
-                  {/* Discount Badge */}
-                  <div className="absolute top-4 right-4 z-10">
-                    <div className="bg-red-500 text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-lg">
-                      {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
-                    </div>
-                  </div>
-                  
-                  {/* Wishlist Button */}
-                  <button className="absolute top-4 right-16 z-10 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-110">
-                    <Heart className="w-5 h-5 text-gray-600 hover:text-red-500" />
-                  </button>
-                  
-                  {/* Quick Add Button */}
-                  <div className="absolute bottom-4 left-4 right-4 z-10 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                    <button 
-                      onClick={() => addToCart({
-                        id: product.id,
-                        name: product.name,
-                        discountedPrice: product.discountedPrice,
-                        originalPrice: product.originalPrice,
-                        fabric: product.fabric,
-                        occasion: product.occasion,
-                        category: product.name.includes('Saree') ? 'Sarees' : 'Blouses'
-                      })}
-                      className="w-full bg-primary-maroon text-white py-3 px-4 rounded-xl font-semibold hover:bg-deep-maroon transition-colors duration-300 shadow-lg backdrop-blur-sm"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="p-5">
-                  <div className="mb-3">
-                    <h3 className="font-semibold text-gray-900 text-lg leading-tight line-clamp-2 group-hover:text-primary-maroon transition-colors duration-300">
-                      {product.name}
-                    </h3>
-                    <p className="text-sm text-gray-500 mt-1">{product.fabric} • {product.occasion}</p>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium text-gray-700">{product.rating}</span>
-                      <span className="text-sm text-gray-400">({product.reviews})</span>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <span className="text-xl font-bold text-primary-maroon">
-                        ₹{product.discountedPrice.toLocaleString()}
-                      </span>
-                      <span className="text-sm text-gray-500 line-through">
-                        ₹{product.originalPrice.toLocaleString()}
-                      </span>
+          {/* Carousel Container */}
+          <div className="relative overflow-hidden">
+            <div className="flex transition-transform duration-300 ease-in-out" style={{transform: `translateX(-${currentSlide * (window.innerWidth < 768 ? 100 : 25)}%)`}}>
+              {featuredProducts.map((product) => (
+                <div key={product.id} className="w-full md:w-1/4 flex-shrink-0 px-3">
+                  <div className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100">
+                    <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
+                      <img 
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        onError={(e) => {
+                          e.target.src = '/images/Screenshot 2026-01-24 at 6.53.02PM.png';
+                        }}
+                      />
+                      
+                      <div className="absolute top-4 left-4 z-10">
+                        <MarketingTags badges={product.badges} />
+                      </div>
+                      
+                      <div className="absolute top-4 right-4 z-10">
+                        <div className="bg-red-500 text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-lg">
+                          {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
+                        </div>
+                      </div>
+                      
+                      <div className="absolute bottom-4 left-4 right-4 z-10 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <button 
+                          onClick={() => addToCart({
+                            id: product.id,
+                            name: product.name,
+                            discountedPrice: product.discountedPrice,
+                            originalPrice: product.originalPrice,
+                            fabric: product.fabric,
+                            occasion: product.occasion,
+                            category: product.name.includes('Saree') ? 'Sarees' : 'Blouses'
+                          })}
+                          className="w-full bg-primary-maroon text-white py-3 px-4 rounded-xl font-semibold hover:bg-deep-maroon transition-colors duration-300 shadow-lg backdrop-blur-sm"
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
                     </div>
                     
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-green-600 font-medium bg-green-50 px-2 py-1 rounded-lg">
-                        Save ₹{(product.originalPrice - product.discountedPrice).toLocaleString()}
-                      </span>
-                      <div className="flex items-center gap-1 text-xs text-gray-500">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span>In Stock</span>
+                    <div className="p-5">
+                      <div className="mb-3">
+                        <h3 className="font-semibold text-gray-900 text-lg leading-tight line-clamp-2 group-hover:text-primary-maroon transition-colors duration-300">
+                          {product.name}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">{product.fabric} • {product.occasion}</p>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          <span className="text-sm font-medium text-gray-700">{product.rating}</span>
+                          <span className="text-sm text-gray-400">({product.reviews})</span>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl font-bold text-primary-maroon">
+                            ₹{product.discountedPrice.toLocaleString()}
+                          </span>
+                          <span className="text-sm text-gray-500 line-through">
+                            ₹{product.originalPrice.toLocaleString()}
+                          </span>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-green-600 font-medium bg-green-50 px-2 py-1 rounded-lg">
+                            Save ₹{(product.originalPrice - product.discountedPrice).toLocaleString()}
+                          </span>
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span>In Stock</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            
+            {/* Navigation Buttons */}
+            <button 
+              onClick={() => setCurrentSlide(Math.max(0, currentSlide - 1))}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all duration-300 disabled:opacity-50"
+              disabled={currentSlide === 0}
+            >
+              <svg className="w-4 h-4 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <button 
+              onClick={() => setCurrentSlide(Math.min(featuredProducts.length - (window.innerWidth < 768 ? 1 : 4), currentSlide + 1))}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all duration-300 disabled:opacity-50"
+              disabled={currentSlide >= featuredProducts.length - (window.innerWidth < 768 ? 1 : 4)}
+            >
+              <svg className="w-4 h-4 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
           
           <div className="text-center mt-12">
@@ -524,7 +598,7 @@ const HomePage = () => {
 
       {/* Combo Packages */}
       <section className="py-20 bg-gradient-to-br from-royal-gold/10 to-accent-gold/10">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="w-full px-2">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-text-dark mb-6">
               Special Combo Packages
@@ -535,7 +609,7 @@ const HomePage = () => {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <div className="combo-card">
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-primary-maroon mb-4">
@@ -599,8 +673,8 @@ const HomePage = () => {
 
       {/* Store Information */}
       <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="w-full px-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold text-text-dark mb-8">
                 Visit Our Store
@@ -700,8 +774,8 @@ const HomePage = () => {
 
       {/* Footer */}
       <footer className="bg-gradient-to-br from-text-dark to-gray-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
+        <div className="w-full px-2">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
               <h3 className="text-2xl font-bold text-royal-gold mb-4">
                 Saksham Fashion Zone
