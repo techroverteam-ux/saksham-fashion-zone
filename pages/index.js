@@ -9,6 +9,7 @@ import UniqueCarousel from '../components/UniqueCarousel';
 import MarketingTags from '../components/MarketingTags';
 import MarketingBanner from '../components/MarketingBanner';
 import UserAuth from '../components/UserAuth';
+import ProductSync from '../utils/ProductSync';
 import productsData from '../data/products.js';
 
 const HomePage = () => {
@@ -46,13 +47,24 @@ const HomePage = () => {
   }, []);
   
   useEffect(() => {
+    // Initialize products if needed
+    ProductSync.initializeProducts();
+    
+    // Load products using ProductSync
+    const loadProducts = () => {
+      const data = ProductSync.getProducts();
+      setFeaturedProducts(data.products);
+    };
+    
+    loadProducts();
+    
+    // Set up cross-tab synchronization
+    const cleanup = ProductSync.addSyncListeners(loadProducts);
+    
     // Simulate loading
     setTimeout(() => setLoading(false), 1500);
     
-    // Force refresh with latest products from static data
-    localStorage.setItem('admin-products', JSON.stringify(productsData.products));
-    localStorage.setItem('saksham-products', JSON.stringify(productsData));
-    setFeaturedProducts(productsData.products);
+    return cleanup;
   }, []);
 
   useEffect(() => {
@@ -380,7 +392,7 @@ const HomePage = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {featuredProducts.filter(p => p.badges?.includes('Trending')).slice(0, 4).map((product) => (
-                <div key={product.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <div key={product.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer" onClick={() => window.open(`/product-detail?id=${product.id}`, '_blank')}>
                   <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
                     <img 
                       src={product.image}
@@ -425,7 +437,7 @@ const HomePage = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {featuredProducts.filter(p => p.badges?.includes('Bestseller')).slice(0, 4).map((product) => (
-                <div key={product.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <div key={product.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer" onClick={() => window.open(`/product-detail?id=${product.id}`, '_blank')}>
                   <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
                     <img 
                       src={product.image}
@@ -470,7 +482,7 @@ const HomePage = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {featuredProducts.filter(p => p.badges?.includes('New Arrival')).slice(0, 4).map((product) => (
-                <div key={product.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <div key={product.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer" onClick={() => window.open(`/product-detail?id=${product.id}`, '_blank')}>
                   <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
                     <img 
                       src={product.image}
@@ -525,7 +537,7 @@ const HomePage = () => {
             <div className="flex transition-transform duration-300 ease-in-out" style={{transform: `translateX(-${currentSlide * 25}%)`}}>
               {featuredProducts.map((product) => (
                 <div key={product.id} className="w-full md:w-1/4 flex-shrink-0 px-3">
-                  <div className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100">
+                  <div className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 cursor-pointer" onClick={() => window.open(`/product-detail?id=${product.id}`, '_blank')}>
                     <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
                       <img 
                         src={product.image}
@@ -548,15 +560,18 @@ const HomePage = () => {
                       
                       <div className="absolute bottom-4 left-4 right-4 z-10 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                         <button 
-                          onClick={() => addToCart({
-                            id: product.id,
-                            name: product.name,
-                            discountedPrice: product.discountedPrice,
-                            originalPrice: product.originalPrice,
-                            fabric: product.fabric,
-                            occasion: product.occasion,
-                            category: product.name.includes('Saree') ? 'Sarees' : 'Blouses'
-                          })}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            addToCart({
+                              id: product.id,
+                              name: product.name,
+                              discountedPrice: product.discountedPrice,
+                              originalPrice: product.originalPrice,
+                              fabric: product.fabric,
+                              occasion: product.occasion,
+                              category: product.name.includes('Saree') ? 'Sarees' : 'Blouses'
+                            });
+                          }}
                           className="w-full bg-primary-maroon text-white py-3 px-4 rounded-xl font-semibold hover:bg-deep-maroon transition-colors duration-300 shadow-lg backdrop-blur-sm"
                         >
                           Add to Cart

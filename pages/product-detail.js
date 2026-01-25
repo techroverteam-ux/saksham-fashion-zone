@@ -4,6 +4,7 @@ import { Heart, Share2, Star, Truck, Shield, RotateCcw, MessageCircle, ShoppingB
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
+import ProductSync from '../utils/ProductSync';
 import productsData from '../data/products.js';
 
 const ProductDetail = () => {
@@ -17,12 +18,10 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (id) {
-      const adminProducts = localStorage.getItem('saksham-products');
-      const data = adminProducts ? JSON.parse(adminProducts) : productsData;
-      const foundProduct = data.products.find(p => p.id === parseInt(id));
+      const foundProduct = ProductSync.getProductById(id);
       if (foundProduct) {
         setProduct(foundProduct);
-        setSelectedColor(foundProduct.selectedColor);
+        setSelectedColor(foundProduct.colors?.[0] || null);
       }
     }
   }, [id]);
@@ -83,10 +82,13 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div className="relative">
               <img 
-                src={product.image}
+                src={product.image || product.mainImages?.[0]?.url || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDQwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjOEIwMDAwIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMzAwIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UHJvZHVjdCBJbWFnZTwvdGV4dD4KPC9zdmc+'}
                 alt={product.name}
                 className="w-full h-[600px] object-cover rounded-lg"
                 style={{filter: selectedColor?.hex !== '#FFFFFF' ? `hue-rotate(${selectedColor?.code === 'RED' ? '0deg' : selectedColor?.code === 'BLUE' ? '240deg' : selectedColor?.code === 'GREEN' ? '120deg' : '0deg'})` : 'none'}}
+                onError={(e) => {
+                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDQwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjOEIwMDAwIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMzAwIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UHJvZHVjdCBJbWFnZTwvdGV4dD4KPC9zdmc+';
+                }}
               />
               <div className="absolute top-4 right-4 flex gap-2">
                 <button className="p-2 bg-white rounded-full shadow-md hover:bg-gray-50">

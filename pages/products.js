@@ -7,7 +7,66 @@ import ProductSkeleton from '../components/ProductSkeleton';
 import ReviewSystem from '../components/ReviewSystem';
 import MarketingTags from '../components/MarketingTags';
 import { useCart } from '../context/CartContext';
+import ProductSync from '../utils/ProductSync';
 import productsData from '../data/products.js';
+
+const BadgeBasedSections = ({ products, ProductCard }) => {
+  const getProductsByBadge = (badge) => {
+    return products.filter(product => product.badges?.includes(badge)).slice(0, 6);
+  };
+
+  const sections = [
+    { title: 'New Arrivals', badge: 'New Arrival', icon: '🆕', color: 'text-green-600' },
+    { title: 'Bestsellers', badge: 'Bestseller', icon: '⭐', color: 'text-blue-600' },
+    { title: 'Trending Now', badge: 'Trending', icon: '🔥', color: 'text-purple-600' },
+    { title: 'Hot Deals', badge: 'Hot Deal', icon: '💥', color: 'text-red-600' }
+  ];
+
+  return (
+    <div className="space-y-8">
+      {sections.map((section) => {
+        const sectionProducts = getProductsByBadge(section.badge);
+        
+        if (sectionProducts.length === 0) return null;
+        
+        return (
+          <div key={section.badge} className="space-y-4">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-2xl">{section.icon}</span>
+              <h3 className={`text-2xl font-bold ${section.color} font-playfair`}>{section.title}</h3>
+              <div className="flex-1 h-px bg-gradient-to-r from-primary-maroon/30 to-transparent"></div>
+              <span className="text-sm text-gray-500">{sectionProducts.length} items</span>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {sectionProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+      
+      {/* Show all products if no badge-specific products exist */}
+      {sections.every(section => getProductsByBadge(section.badge).length === 0) && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="text-2xl">💼</span>
+            <h3 className="text-2xl font-bold text-primary-maroon font-playfair">All Products</h3>
+            <div className="flex-1 h-px bg-gradient-to-r from-primary-maroon/30 to-transparent"></div>
+            <span className="text-sm text-gray-500">{products.length} items</span>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {products.slice(0, 12).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ProductListing = () => {
   const { getCartCount, addToCart } = useCart();
@@ -25,17 +84,27 @@ const ProductListing = () => {
   
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
-      const adminProducts = localStorage.getItem('saksham-products');
-      let data = adminProducts ? JSON.parse(adminProducts) : productsData;
-      if (!adminProducts) localStorage.setItem('saksham-products', JSON.stringify(data));
-      
+    
+    // Initialize products if needed
+    ProductSync.initializeProducts();
+    
+    const loadProducts = () => {
+      const data = ProductSync.getProducts();
       setProductsDataState(data);
       setProducts(data.products);
       setFilteredProducts(data.products);
       setDisplayedProducts(data.products.slice(0, 30));
+    };
+    
+    setTimeout(() => {
+      loadProducts();
       setLoading(false);
     }, 1000);
+    
+    // Set up cross-tab synchronization
+    const cleanup = ProductSync.addSyncListeners(loadProducts);
+    
+    return cleanup;
   }, []);
   
   useEffect(() => {
@@ -753,11 +822,19 @@ const ProductListing = () => {
               </div>
             ) : displayedProducts.length > 0 ? (
               <>
-                <div className={`grid gap-4 ${viewMode === 'grid' ? 'grid-cols-3' : 'grid-cols-1'}`}>
-                  {displayedProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
+                {/* Badge-based sections when no filters are active */}
+                {!hasActiveFilters() && (
+                  <BadgeBasedSections products={products} ProductCard={ProductCard} />
+                )}
+                
+                {/* Regular grid when filters are active */}
+                {hasActiveFilters() && (
+                  <div className={`grid gap-4 ${viewMode === 'grid' ? 'grid-cols-3' : 'grid-cols-1'}`}>
+                    {displayedProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                )}
                 
                 {loadingMore && (
                   <div className={`grid gap-4 mt-4 ${viewMode === 'grid' ? 'grid-cols-3' : 'grid-cols-1'}`}>
@@ -767,7 +844,7 @@ const ProductListing = () => {
                   </div>
                 )}
                 
-                {displayedProducts.length < filteredProducts.length && !loadingMore && (
+                {hasActiveFilters() && displayedProducts.length < filteredProducts.length && !loadingMore && (
                   <div className="text-center mt-8">
                     <div className="text-sm text-gray-500">
                       Scroll down to load more ({filteredProducts.length - displayedProducts.length} remaining)

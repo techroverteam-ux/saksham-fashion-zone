@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X, Upload, Image as ImageIcon } from 'lucide-react';
+import ProductSync from '../utils/ProductSync';
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
@@ -21,8 +22,8 @@ const ProductManagement = () => {
   const sizes = ['Free Size', 'S', 'M', 'L', 'XL', 'XXL'];
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin-products');
-    if (saved) setProducts(JSON.parse(saved));
+    const data = ProductSync.getProducts();
+    setProducts(data.products);
   }, []);
 
   const addVariant = () => {
@@ -67,7 +68,24 @@ const ProductManagement = () => {
       ...productForm,
       id: editingProduct?.id || Date.now(),
       createdAt: editingProduct?.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      // Ensure required fields for frontend compatibility
+      discountedPrice: productForm.variants[0]?.price ? parseInt(productForm.variants[0].price) : 0,
+      originalPrice: productForm.variants[0]?.price ? Math.round(parseInt(productForm.variants[0].price) * 1.2) : 0,
+      rating: 4.5,
+      reviews: 0,
+      reviewCount: 0,
+      colors: productForm.variants.map(v => ({
+        name: v.color,
+        code: v.color.toUpperCase(),
+        hex: getColorHex(v.color)
+      })),
+      stock: productForm.variants.reduce((sum, v) => sum + parseInt(v.stock || 0), 0),
+      isActive: true,
+      isFeatured: productForm.badges.includes('Bestseller'),
+      comboEligible: productForm.category === 'Sarees',
+      image: productForm.images[0]?.url || '/images/placeholder.jpg',
+      features: [productForm.fabric, 'Quality Assured', 'Perfect Fit', 'Easy Care']
     };
 
     let updatedProducts;
@@ -78,9 +96,17 @@ const ProductManagement = () => {
     }
 
     setProducts(updatedProducts);
-    localStorage.setItem('admin-products', JSON.stringify(updatedProducts));
-    localStorage.setItem('saksham-products', JSON.stringify({ products: updatedProducts }));
+    ProductSync.saveProducts(updatedProducts);
     resetForm();
+  };
+
+  const getColorHex = (colorName) => {
+    const colorMap = {
+      'Red': '#DC143C', 'Blue': '#0000FF', 'Green': '#008000', 'Pink': '#FFC0CB',
+      'Purple': '#800080', 'Orange': '#FFA500', 'Yellow': '#FFFF00', 'Black': '#000000',
+      'White': '#FFFFFF', 'Gold': '#FFD700'
+    };
+    return colorMap[colorName] || '#000000';
   };
 
   const resetForm = () => {
@@ -102,7 +128,7 @@ const ProductManagement = () => {
   const deleteProduct = (id) => {
     const updated = products.filter(p => p.id !== id);
     setProducts(updated);
-    localStorage.setItem('admin-products', JSON.stringify(updated));
+    ProductSync.saveProducts(updated);
   };
 
   return (

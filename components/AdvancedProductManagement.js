@@ -137,11 +137,11 @@ const AdvancedProductManagement = ({ showToast }) => {
       isActive: productForm.isActive,
       isFeatured: productForm.isFeatured,
       comboEligible: productForm.comboEligible,
-      // Store only image file names, not the actual data
+      // Store image URLs pointing to public/images
       mainImages: productForm.mainImages.map(img => ({
         id: img.id,
-        fileName: img.fileName || img.name,
-        url: `https://via.placeholder.com/400x500/8B0000/FFFFFF?text=${encodeURIComponent(img.name || 'Image')}`
+        fileName: img.fileName,
+        url: img.url // Public URL like /images/product_123456_abc.jpg
       })),
       variants: productForm.variants.map(variant => ({
         color: variant.color,
@@ -152,8 +152,8 @@ const AdvancedProductManagement = ({ showToast }) => {
         sku: variant.sku,
         images: variant.images?.map(img => ({
           id: img.id,
-          fileName: img.fileName || img.name,
-          url: `https://via.placeholder.com/400x500/8B0000/FFFFFF?text=${encodeURIComponent(img.name || 'Variant')}`
+          fileName: img.fileName,
+          url: img.url // Public URL like /images/product_123456_abc.jpg
         })) || []
       })),
       // Generate colors from variants
@@ -171,7 +171,7 @@ const AdvancedProductManagement = ({ showToast }) => {
       rating: 4.0 + Math.random(),
       reviews: Math.floor(Math.random() * 50) + 10,
       reviewCount: Math.floor(Math.random() * 50) + 10,
-      image: `https://via.placeholder.com/400x500/8B0000/FFFFFF?text=${encodeURIComponent(productForm.name)}`,
+      image: productForm.mainImages[0]?.url || `https://via.placeholder.com/400x500/8B0000/FFFFFF?text=${encodeURIComponent(productForm.name)}`,
       createdAt: editingProduct?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -190,10 +190,15 @@ const AdvancedProductManagement = ({ showToast }) => {
     try {
       localStorage.setItem('admin-products', JSON.stringify(updatedProducts));
       localStorage.setItem('saksham-products', JSON.stringify({ products: updatedProducts }));
-      showToast('Product saved with image references', 'success');
+      showToast('Product saved successfully', 'success');
     } catch (error) {
       showToast('Product saved but storage limit reached', 'info');
     }
+    
+    // Force reload products to ensure display is updated
+    setTimeout(() => {
+      loadData();
+    }, 100);
     
     resetForm();
   };
@@ -238,7 +243,19 @@ const AdvancedProductManagement = ({ showToast }) => {
   };
 
   const editProduct = (product) => {
-    setProductForm(product);
+    setProductForm({
+      ...product,
+      mainImages: product.mainImages || [],
+      variants: product.variants || [{
+        color: '',
+        size: 'Free Size',
+        price: '',
+        originalPrice: '',
+        stock: '',
+        sku: '',
+        images: []
+      }]
+    });
     setEditingProduct(product);
     setShowForm(true);
   };
@@ -256,7 +273,7 @@ const AdvancedProductManagement = ({ showToast }) => {
     const duplicated = {
       ...product,
       id: Date.now(),
-      name: `${product.name} (Copy)`,
+      name: product.name.replace(/ \(Copy\).*$/, '') + ' (Copy)',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -270,31 +287,32 @@ const AdvancedProductManagement = ({ showToast }) => {
   const handleImageUpload = (files, variantIndex = null) => {
     Array.from(files).forEach(file => {
       if (file.type.startsWith('image/')) {
-        // Instead of storing base64, create object URL for preview
-        const imageData = {
-          id: Date.now() + Math.random(),
-          url: URL.createObjectURL(file),
-          name: file.name,
-          size: file.size,
-          // Store only file name for saving, not the actual data
-          fileName: file.name
-        };
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageData = {
+            id: Date.now() + Math.random(),
+            url: e.target.result, // Use base64 for immediate display
+            name: file.name,
+            fileName: file.name
+          };
 
-        if (variantIndex !== null) {
-          setProductForm(prev => ({
-            ...prev,
-            variants: prev.variants.map((variant, i) => 
-              i === variantIndex 
-                ? { ...variant, images: [...variant.images, imageData] }
-                : variant
-            )
-          }));
-        } else {
-          setProductForm(prev => ({
-            ...prev,
-            mainImages: [...prev.mainImages, imageData]
-          }));
-        }
+          if (variantIndex !== null) {
+            setProductForm(prev => ({
+              ...prev,
+              variants: prev.variants.map((variant, i) => 
+                i === variantIndex 
+                  ? { ...variant, images: [...variant.images, imageData] }
+                  : variant
+              )
+            }));
+          } else {
+            setProductForm(prev => ({
+              ...prev,
+              mainImages: [...prev.mainImages, imageData]
+            }));
+          }
+        };
+        reader.readAsDataURL(file);
       }
     });
   };
@@ -431,13 +449,16 @@ const AdvancedProductManagement = ({ showToast }) => {
       {viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {paginatedProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow-soft overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="relative h-48 bg-gray-200">
-                {product.mainImages?.[0] ? (
+            <div key={product.id} className="bg-white rounded-lg shadow-soft overflow-hidden hover:shadow-lg transition-all duration-300 group cursor-pointer" onClick={() => window.open(`/product-detail?id=${product.id}`, '_blank')}>
+              <div className="relative h-48 bg-gray-200 overflow-hidden">
+                {(product.image || product.mainImages?.[0]?.url) ? (
                   <img 
-                    src={product.mainImages[0].url} 
+                    src={product.image || product.mainImages[0].url} 
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    onError={(e) => {
+                      e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDQwMCA1MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNTAwIiBmaWxsPSIjOEIwMDAwIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjUwIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UHJvZHVjdDwvdGV4dD4KPC9zdmc+';
+                    }}
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full">
@@ -453,22 +474,41 @@ const AdvancedProductManagement = ({ showToast }) => {
                   ))}
                 </div>
 
-                <div className="absolute top-2 right-2 flex gap-1">
+                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <button 
-                    onClick={() => editProduct(product)}
-                    className="bg-blue-600 text-white p-1.5 rounded-full hover:bg-blue-700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.open(`/product-detail?id=${product.id}`, '_blank');
+                    }}
+                    className="bg-purple-600 text-white p-1.5 rounded-full hover:bg-purple-700 transform hover:scale-110 transition-all"
+                    title="View Details"
+                  >
+                    <Eye className="w-3 h-3" />
+                  </button>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      editProduct(product);
+                    }}
+                    className="bg-blue-600 text-white p-1.5 rounded-full hover:bg-blue-700 transform hover:scale-110 transition-all"
                   >
                     <Edit className="w-3 h-3" />
                   </button>
                   <button 
-                    onClick={() => duplicateProduct(product)}
-                    className="bg-green-600 text-white p-1.5 rounded-full hover:bg-green-700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      duplicateProduct(product);
+                    }}
+                    className="bg-green-600 text-white p-1.5 rounded-full hover:bg-green-700 transform hover:scale-110 transition-all"
                   >
                     <Copy className="w-3 h-3" />
                   </button>
                   <button 
-                    onClick={() => deleteProduct(product.id)}
-                    className="bg-red-600 text-white p-1.5 rounded-full hover:bg-red-700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteProduct(product.id);
+                    }}
+                    className="bg-red-600 text-white p-1.5 rounded-full hover:bg-red-700 transform hover:scale-110 transition-all"
                   >
                     <Trash2 className="w-3 h-3" />
                   </button>
@@ -481,11 +521,11 @@ const AdvancedProductManagement = ({ showToast }) => {
                 
                 <div className="flex justify-between items-center text-xs mb-2">
                   <span>{product.variants?.length || 0} variants</span>
-                  <span className="font-medium">Stock: {product.totalStock || 0}</span>
+                  <span className="font-medium">Stock: {product.stock || 0}</span>
                 </div>
 
                 <div className="text-sm font-bold text-primary-maroon">
-                  ₹{product.priceRange?.min?.toLocaleString()} - ₹{product.priceRange?.max?.toLocaleString()}
+                  ₹{product.discountedPrice?.toLocaleString() || 'N/A'}
                 </div>
 
                 <div className="flex items-center justify-between mt-2">
@@ -511,7 +551,7 @@ const AdvancedProductManagement = ({ showToast }) => {
               <tr>
                 <th className="px-4 py-3 text-left">Product</th>
                 <th className="px-4 py-3 text-left">Category</th>
-                <th className="px-4 py-3 text-left">Price Range</th>
+                <th className="px-4 py-3 text-left">Price</th>
                 <th className="px-4 py-3 text-left">Stock</th>
                 <th className="px-4 py-3 text-left">Status</th>
                 <th className="px-4 py-3 text-left">Actions</th>
@@ -519,12 +559,19 @@ const AdvancedProductManagement = ({ showToast }) => {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {paginatedProducts.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-50">
+                <tr key={product.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => window.open(`/product-detail?id=${product.id}`, '_blank')}>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-gray-200 rounded overflow-hidden">
-                        {product.mainImages?.[0] ? (
-                          <img src={product.mainImages[0].url} alt="" className="w-full h-full object-cover" />
+                        {(product.image || product.mainImages?.[0]?.url) ? (
+                          <img 
+                            src={product.image || product.mainImages[0].url} 
+                            alt="" 
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.src = 'https://via.placeholder.com/200x200/8B0000/FFFFFF?text=Product';
+                            }}
+                          />
                         ) : (
                           <ImageIcon className="w-6 h-6 text-gray-400 m-3" />
                         )}
@@ -536,8 +583,8 @@ const AdvancedProductManagement = ({ showToast }) => {
                     </div>
                   </td>
                   <td className="px-4 py-3">{product.category}</td>
-                  <td className="px-4 py-3">₹{product.priceRange?.min?.toLocaleString()} - ₹{product.priceRange?.max?.toLocaleString()}</td>
-                  <td className="px-4 py-3">{product.totalStock || 0}</td>
+                  <td className="px-4 py-3">₹{product.discountedPrice?.toLocaleString() || 'N/A'}</td>
+                  <td className="px-4 py-3">{product.stock || 0}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 text-xs rounded-full ${
                       product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -547,13 +594,28 @@ const AdvancedProductManagement = ({ showToast }) => {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2">
-                      <button onClick={() => editProduct(product)} className="text-blue-600 hover:text-blue-800">
+                      <button onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(`/product-detail?id=${product.id}`, '_blank');
+                      }} className="text-purple-600 hover:text-purple-800" title="View Details">
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button onClick={(e) => {
+                        e.stopPropagation();
+                        editProduct(product);
+                      }} className="text-blue-600 hover:text-blue-800">
                         <Edit className="w-4 h-4" />
                       </button>
-                      <button onClick={() => duplicateProduct(product)} className="text-green-600 hover:text-green-800">
+                      <button onClick={(e) => {
+                        e.stopPropagation();
+                        duplicateProduct(product);
+                      }} className="text-green-600 hover:text-green-800">
                         <Copy className="w-4 h-4" />
                       </button>
-                      <button onClick={() => deleteProduct(product.id)} className="text-red-600 hover:text-red-800">
+                      <button onClick={(e) => {
+                        e.stopPropagation();
+                        deleteProduct(product.id);
+                      }} className="text-red-600 hover:text-red-800">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>

@@ -290,6 +290,86 @@ const AdminPortal = () => {
   );
 };
 
+const ProductCategoriesSection = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const adminProducts = JSON.parse(localStorage.getItem('admin-products') || '[]');
+    setProducts(adminProducts);
+  }, []);
+
+  const getProductsByBadge = (badge) => {
+    return products.filter(product => product.badges?.includes(badge)).slice(0, 4);
+  };
+
+  const categories = [
+    { title: 'New Arrivals', badge: 'New Arrival', color: 'bg-green-100 text-green-800', icon: '🆕' },
+    { title: 'Bestsellers', badge: 'Bestseller', color: 'bg-blue-100 text-blue-800', icon: '⭐' },
+    { title: 'Trending', badge: 'Trending', color: 'bg-purple-100 text-purple-800', icon: '🔥' },
+    { title: 'Hot Deals', badge: 'Hot Deal', color: 'bg-red-100 text-red-800', icon: '💥' }
+  ];
+
+  return (
+    <div className="space-y-6">
+      <h3 className="text-xl font-bold text-primary-maroon font-playfair">Product Categories</h3>
+      
+      {categories.map((category) => {
+        const categoryProducts = getProductsByBadge(category.badge);
+        
+        return (
+          <div key={category.badge} className="bg-ivory-white p-6 rounded-lg shadow-soft">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{category.icon}</span>
+                <h4 className="text-lg font-semibold text-primary-maroon font-playfair">{category.title}</h4>
+                <span className={`px-2 py-1 text-xs rounded-full ${category.color}`}>
+                  {categoryProducts.length} items
+                </span>
+              </div>
+            </div>
+            
+            {categoryProducts.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {categoryProducts.map((product) => (
+                  <div key={product.id} className="border border-soft-beige rounded-lg p-3 hover:shadow-md transition-shadow">
+                    <div className="aspect-square bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                      {product.image ? (
+                        <img 
+                          src={product.image} 
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/200x200/8B0000/FFFFFF?text=Product';
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                          <Package className="w-8 h-8" />
+                        </div>
+                      )}
+                    </div>
+                    <h5 className="font-medium text-sm text-text-dark mb-2 line-clamp-2">{product.name}</h5>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="font-bold text-primary-maroon">₹{product.discountedPrice?.toLocaleString()}</span>
+                      <span className="text-text-dark/70">Stock: {product.stock || 0}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-text-dark/70">
+                <Package className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p>No {category.title.toLowerCase()} found</p>
+                <p className="text-sm">Add products with "{category.badge}" badge to see them here</p>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const DashboardOverview = ({ downloadPDF, downloadExcel, setActiveMenu }) => {
   const [stats, setStats] = useState({
     totalProducts: 0,
@@ -532,6 +612,9 @@ const DashboardOverview = ({ downloadPDF, downloadExcel, setActiveMenu }) => {
           </div>
         </div>
       </div>
+      
+      {/* Product Categories Section */}
+      <ProductCategoriesSection />
     </div>
   );
 };
