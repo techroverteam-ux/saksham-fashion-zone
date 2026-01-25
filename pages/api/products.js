@@ -1,4 +1,4 @@
-import DatabaseManager from '../../../utils/DatabaseManager';
+import DatabaseManager from '../../utils/DatabaseManager';
 
 export default function handler(req, res) {
   const { method } = req;
