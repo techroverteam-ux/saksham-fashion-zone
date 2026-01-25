@@ -284,53 +284,54 @@ const AdvancedProductManagement = ({ showToast }) => {
     showToast('Product duplicated successfully', 'success');
   };
 
-  const handleImageUpload = async (files, variantIndex = null) => {
-    for (const file of Array.from(files)) {
+  const handleImageUpload = (files, variantIndex = null) => {
+    Array.from(files).forEach(file => {
       if (file.type.startsWith('image/')) {
-        try {
-          const formData = new FormData();
-          formData.append('image', file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const timestamp = Date.now();
+          const randomId = Math.random().toString(36).substring(2, 15);
+          const ext = file.name.split('.').pop();
+          const fileName = `product_${timestamp}_${randomId}.${ext}`;
           
-          const response = await fetch('http://localhost:3001/upload', {
-            method: 'POST',
-            body: formData
-          });
-          
-          const result = await response.json();
-          
-          if (result.success) {
-            const imageData = {
-              id: Date.now() + Math.random(),
-              url: result.url,
-              name: file.name,
-              fileName: result.filename
-            };
+          const imageData = {
+            id: timestamp + Math.random(),
+            url: `/images/${fileName}`,
+            base64: e.target.result,
+            name: file.name,
+            fileName: fileName
+          };
 
-            if (variantIndex !== null) {
-              setProductForm(prev => ({
-                ...prev,
-                variants: prev.variants.map((variant, i) => 
-                  i === variantIndex 
-                    ? { ...variant, images: [...variant.images, imageData] }
-                    : variant
-                )
-              }));
-            } else {
-              setProductForm(prev => ({
-                ...prev,
-                mainImages: [...prev.mainImages, imageData]
-              }));
-            }
-            
-            showToast(`Image uploaded: ${file.name}`, 'success');
+          // Store for file extraction
+          const pendingFiles = JSON.parse(localStorage.getItem('pending-files') || '[]');
+          pendingFiles.push({
+            fileName: fileName,
+            base64: e.target.result,
+            mimeType: file.type
+          });
+          localStorage.setItem('pending-files', JSON.stringify(pendingFiles));
+
+          if (variantIndex !== null) {
+            setProductForm(prev => ({
+              ...prev,
+              variants: prev.variants.map((variant, i) => 
+                i === variantIndex 
+                  ? { ...variant, images: [...variant.images, imageData] }
+                  : variant
+              )
+            }));
           } else {
-            showToast('Upload failed', 'error');
+            setProductForm(prev => ({
+              ...prev,
+              mainImages: [...prev.mainImages, imageData]
+            }));
           }
-        } catch (error) {
-          showToast('Upload server not running', 'error');
-        }
+          
+          showToast(`Image ready: ${fileName}`, 'success');
+        };
+        reader.readAsDataURL(file);
       }
-    }
+    });
   };
 
   const removeImage = (imageId, variantIndex = null) => {
@@ -406,13 +407,20 @@ const AdvancedProductManagement = ({ showToast }) => {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              const count = ImageExporter.exportAllImages();
-              showToast(`Exported ${count} images`, 'success');
+              const pendingFiles = JSON.parse(localStorage.getItem('pending-files') || '[]');
+              pendingFiles.forEach(file => {
+                const link = document.createElement('a');
+                link.href = file.base64;
+                link.download = file.fileName;
+                link.click();
+              });
+              showToast(`Downloaded ${pendingFiles.length} files`, 'success');
+              showToast('Move files to /public/images/ folder', 'info');
             }}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
           >
             <Download className="w-4 h-4" />
-            Export Images
+            Download Files
           </button>
           <button
             onClick={() => setShowCategoryForm(true)}
@@ -483,7 +491,10 @@ const AdvancedProductManagement = ({ showToast }) => {
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     onError={(e) => {
-                      e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDQwMCA1MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNTAwIiBmaWxsPSIjOEIwMDAwIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjUwIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UHJvZHVjdDwvdGV4dD4KPC9zdmc+';
+                      const imageData = product.mainImages?.[0];
+                      if (imageData?.base64) {
+                        e.target.src = imageData.base64;
+                      }
                     }}
                   />
                 ) : (
