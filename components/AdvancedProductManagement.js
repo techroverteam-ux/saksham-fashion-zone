@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Save, X, Upload, Image as ImageIcon, Camera, Tag, Package, Grid, List, Search, Filter, Eye, Copy } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, Upload, Image as ImageIcon, Camera, Tag, Package, Grid, List, Search, Filter, Eye, Copy, Download } from 'lucide-react';
 import StorageManager from '../utils/StorageManager';
+import ImageExporter from '../utils/ImageExporter';
 
 const AdvancedProductManagement = ({ showToast }) => {
   const [products, setProducts] = useState([]);
@@ -137,11 +138,10 @@ const AdvancedProductManagement = ({ showToast }) => {
       isActive: productForm.isActive,
       isFeatured: productForm.isFeatured,
       comboEligible: productForm.comboEligible,
-      // Store image URLs pointing to public/images
       mainImages: productForm.mainImages.map(img => ({
         id: img.id,
         fileName: img.fileName,
-        url: img.url // Public URL like /images/product_123456_abc.jpg
+        url: img.url
       })),
       variants: productForm.variants.map(variant => ({
         color: variant.color,
@@ -153,7 +153,7 @@ const AdvancedProductManagement = ({ showToast }) => {
         images: variant.images?.map(img => ({
           id: img.id,
           fileName: img.fileName,
-          url: img.url // Public URL like /images/product_123456_abc.jpg
+          url: img.url
         })) || []
       })),
       // Generate colors from variants
@@ -284,37 +284,53 @@ const AdvancedProductManagement = ({ showToast }) => {
     showToast('Product duplicated successfully', 'success');
   };
 
-  const handleImageUpload = (files, variantIndex = null) => {
-    Array.from(files).forEach(file => {
+  const handleImageUpload = async (files, variantIndex = null) => {
+    for (const file of Array.from(files)) {
       if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const imageData = {
-            id: Date.now() + Math.random(),
-            url: e.target.result, // Use base64 for immediate display
-            name: file.name,
-            fileName: file.name
-          };
+        try {
+          const formData = new FormData();
+          formData.append('image', file);
+          
+          const response = await fetch('http://localhost:3001/upload', {
+            method: 'POST',
+            body: formData
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            const imageData = {
+              id: Date.now() + Math.random(),
+              url: result.url,
+              name: file.name,
+              fileName: result.filename
+            };
 
-          if (variantIndex !== null) {
-            setProductForm(prev => ({
-              ...prev,
-              variants: prev.variants.map((variant, i) => 
-                i === variantIndex 
-                  ? { ...variant, images: [...variant.images, imageData] }
-                  : variant
-              )
-            }));
+            if (variantIndex !== null) {
+              setProductForm(prev => ({
+                ...prev,
+                variants: prev.variants.map((variant, i) => 
+                  i === variantIndex 
+                    ? { ...variant, images: [...variant.images, imageData] }
+                    : variant
+                )
+              }));
+            } else {
+              setProductForm(prev => ({
+                ...prev,
+                mainImages: [...prev.mainImages, imageData]
+              }));
+            }
+            
+            showToast(`Image uploaded: ${file.name}`, 'success');
           } else {
-            setProductForm(prev => ({
-              ...prev,
-              mainImages: [...prev.mainImages, imageData]
-            }));
+            showToast('Upload failed', 'error');
           }
-        };
-        reader.readAsDataURL(file);
+        } catch (error) {
+          showToast('Upload server not running', 'error');
+        }
       }
-    });
+    }
   };
 
   const removeImage = (imageId, variantIndex = null) => {
@@ -388,6 +404,16 @@ const AdvancedProductManagement = ({ showToast }) => {
           <p className="text-gray-600">Manage products with multiple categories and variants</p>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={() => {
+              const count = ImageExporter.exportAllImages();
+              showToast(`Exported ${count} images`, 'success');
+            }}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
+          >
+            <Download className="w-4 h-4" />
+            Export Images
+          </button>
           <button
             onClick={() => setShowCategoryForm(true)}
             className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700"
@@ -569,7 +595,7 @@ const AdvancedProductManagement = ({ showToast }) => {
                             alt="" 
                             className="w-full h-full object-cover"
                             onError={(e) => {
-                              e.target.src = 'https://via.placeholder.com/200x200/8B0000/FFFFFF?text=Product';
+                              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjOEIwMDAwIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+UHJvZHVjdDwvdGV4dD4KPC9zdmc+';
                             }}
                           />
                         ) : (

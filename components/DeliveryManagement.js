@@ -68,20 +68,22 @@ const DeliveryManagement = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Delivery Management</h2>
+      <h2 className="text-2xl font-bold text-primary-maroon font-playfair">Delivery Management</h2>
 
       {/* Stats */}
       <div className="grid md:grid-cols-4 gap-4">
         {statusOptions.slice(0, 4).map(status => {
           const count = deliveries.filter(d => d.status === status).length;
           return (
-            <div key={status} className="bg-white p-4 rounded-lg shadow">
+            <div key={status} className="bg-ivory-white p-4 rounded-lg shadow-soft border-l-4 border-primary-maroon">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">{status}</p>
-                  <p className="text-2xl font-bold">{count}</p>
+                  <p className="text-sm text-text-dark/70 font-inter">{status}</p>
+                  <p className="text-2xl font-bold text-primary-maroon font-playfair">{count}</p>
                 </div>
-                {getStatusIcon(status)}
+                <div className="text-primary-maroon">
+                  {getStatusIcon(status)}
+                </div>
               </div>
             </div>
           );
@@ -89,47 +91,47 @@ const DeliveryManagement = () => {
       </div>
 
       {/* Deliveries Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-ivory-white rounded-lg shadow-soft overflow-hidden">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-primary-maroon text-ivory-white">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Address</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tracking</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Est. Delivery</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider font-inter">Order ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider font-inter">Customer</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider font-inter">Address</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider font-inter">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider font-inter">Tracking</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider font-inter">Est. Delivery</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider font-inter">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-soft-beige">
             {deliveries.map((delivery) => (
-              <tr key={delivery.id}>
-                <td className="px-6 py-4 text-sm font-medium">{delivery.orderId}</td>
+              <tr key={delivery.id} className="hover:bg-soft-beige transition-colors">
+                <td className="px-6 py-4 text-sm font-medium text-text-dark font-inter">{delivery.orderId}</td>
                 <td className="px-6 py-4">
                   <div>
-                    <div className="font-medium">{delivery.customerName}</div>
-                    <div className="text-sm text-gray-500">{delivery.customerPhone}</div>
+                    <div className="font-medium text-text-dark font-inter">{delivery.customerName}</div>
+                    <div className="text-sm text-text-dark/70 font-inter">{delivery.customerPhone}</div>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-sm max-w-xs truncate">{delivery.address}</td>
+                <td className="px-6 py-4 text-sm max-w-xs truncate text-text-dark font-inter">{delivery.address}</td>
                 <td className="px-6 py-4">
                   <select
                     value={delivery.status}
                     onChange={(e) => updateDeliveryStatus(delivery.id, e.target.value)}
-                    className={`px-2 py-1 text-xs rounded-full border-0 ${getStatusColor(delivery.status)}`}
+                    className={`px-2 py-1 text-xs rounded-full border-0 font-inter ${getStatusColor(delivery.status)}`}
                   >
                     {statusOptions.map(status => (
                       <option key={status} value={status}>{status}</option>
                     ))}
                   </select>
                 </td>
-                <td className="px-6 py-4 text-sm font-mono">{delivery.trackingNumber}</td>
-                <td className="px-6 py-4 text-sm">{delivery.estimatedDelivery}</td>
+                <td className="px-6 py-4 text-sm font-mono text-text-dark">{delivery.trackingNumber}</td>
+                <td className="px-6 py-4 text-sm text-text-dark font-inter">{delivery.estimatedDelivery}</td>
                 <td className="px-6 py-4">
                   <button
                     onClick={() => setSelectedDelivery(delivery)}
-                    className="text-blue-600 hover:text-blue-900 text-sm"
+                    className="text-primary-maroon hover:text-deep-maroon text-sm font-medium font-inter transition-colors"
                   >
                     View Details
                   </button>
