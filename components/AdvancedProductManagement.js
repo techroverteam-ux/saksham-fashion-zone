@@ -103,27 +103,30 @@ const AdvancedProductManagement = ({ showToast }) => {
     loadData();
   }, []);
 
-  const loadData = () => {
-    const savedProducts = JSON.parse(localStorage.getItem('admin-products') || '[]');
-    const savedCategories = JSON.parse(localStorage.getItem('admin-categories') || '[]');
-    
-    setProducts(savedProducts);
-    
-    if (savedCategories.length === 0) {
+  const loadData = async () => {
+    try {
+      const [productsRes, categoriesRes] = await Promise.all([
+        fetch('/api/products'),
+        fetch('/api/categories')
+      ]);
+      
+      const productsData = await productsRes.json();
+      const categoriesData = await categoriesRes.json();
+      
+      setProducts(productsData);
+      setCategories(categoriesData.length > 0 ? categoriesData : defaultCategories);
+    } catch (error) {
+      console.error('Failed to load data:', error);
       setCategories(defaultCategories);
-      localStorage.setItem('admin-categories', JSON.stringify(defaultCategories));
-    } else {
-      setCategories(savedCategories);
     }
   };
 
-  const saveProduct = () => {
+  const saveProduct = async () => {
     if (!productForm.name || !productForm.category || productForm.variants.length === 0) {
       showToast('Please fill all required fields', 'error');
       return;
     }
 
-    // Create product with image references instead of full data
     const newProduct = {
       id: editingProduct?.id || Date.now(),
       name: productForm.name,
@@ -138,11 +141,7 @@ const AdvancedProductManagement = ({ showToast }) => {
       isActive: productForm.isActive,
       isFeatured: productForm.isFeatured,
       comboEligible: productForm.comboEligible,
-      mainImages: productForm.mainImages.map(img => ({
-        id: img.id,
-        fileName: img.fileName,
-        url: img.url
-      })),
+      mainImages: productForm.mainImages,
       variants: productForm.variants.map(variant => ({
         color: variant.color,
         size: variant.size,
@@ -150,13 +149,8 @@ const AdvancedProductManagement = ({ showToast }) => {
         originalPrice: parseFloat(variant.originalPrice || variant.price || 0),
         stock: parseInt(variant.stock || 0),
         sku: variant.sku,
-        images: variant.images?.map(img => ({
-          id: img.id,
-          fileName: img.fileName,
-          url: img.url
-        })) || []
+        images: variant.images || []
       })),
-      // Generate colors from variants
       colors: productForm.variants.map(v => ({
         name: v.color || 'Default',
         code: v.color?.toUpperCase() || 'DEFAULT',
@@ -164,7 +158,6 @@ const AdvancedProductManagement = ({ showToast }) => {
       })).filter((color, index, self) => 
         index === self.findIndex(c => c.name === color.name)
       ),
-      // Calculate prices
       originalPrice: Math.max(...productForm.variants.map(v => parseFloat(v.originalPrice || v.price || 0))),
       discountedPrice: Math.min(...productForm.variants.map(v => parseFloat(v.price || 0))),
       stock: productForm.variants.reduce((sum, v) => sum + parseInt(v.stock || 0), 0),
@@ -176,34 +169,26 @@ const AdvancedProductManagement = ({ showToast }) => {
       updatedAt: new Date().toISOString()
     };
 
-    let updatedProducts;
-    if (editingProduct) {
-      updatedProducts = products.map(p => p.id === editingProduct.id ? newProduct : p);
-      showToast('Product updated successfully', 'success');
-    } else {
-      updatedProducts = [...products, newProduct];
-      showToast('Product added successfully', 'success');
-    }
-
-    setProducts(updatedProducts);
-    
     try {
-      localStorage.setItem('admin-products', JSON.stringify(updatedProducts));
-      localStorage.setItem('saksham-products', JSON.stringify({ products: updatedProducts }));
-      showToast('Product saved successfully', 'success');
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProduct)
+      });
+      
+      if (response.ok) {
+        showToast(editingProduct ? 'Product updated successfully' : 'Product added successfully', 'success');
+        loadData();
+        resetForm();
+      } else {
+        showToast('Failed to save product', 'error');
+      }
     } catch (error) {
-      showToast('Product saved but storage limit reached', 'info');
+      showToast('Failed to save product', 'error');
     }
-    
-    // Force reload products to ensure display is updated
-    setTimeout(() => {
-      loadData();
-    }, 100);
-    
-    resetForm();
   };
 
-  const saveCategory = () => {
+  const saveCategory = async () => {
     if (!categoryForm.name) {
       showToast('Please enter category name', 'error');
       return;
@@ -215,19 +200,30 @@ const AdvancedProductManagement = ({ showToast }) => {
       createdAt: new Date().toISOString()
     };
 
-    const updatedCategories = [...categories, newCategory];
-    setCategories(updatedCategories);
-    localStorage.setItem('admin-categories', JSON.stringify(updatedCategories));
-    
-    setCategoryForm({
-      name: '',
-      description: '',
-      subCategories: [],
-      image: '',
-      isActive: true
-    });
-    setShowCategoryForm(false);
-    showToast('Category added successfully', 'success');
+    try {
+      const response = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCategory)
+      });
+      
+      if (response.ok) {
+        showToast('Category added successfully', 'success');
+        loadData();
+        setCategoryForm({
+          name: '',
+          description: '',
+          subCategories: [],
+          image: '',
+          isActive: true
+        });
+        setShowCategoryForm(false);
+      } else {
+        showToast('Failed to save category', 'error');
+      }
+    } catch (error) {
+      showToast('Failed to save category', 'error');
+    }
   };
 
   const resetForm = () => {
@@ -260,16 +256,26 @@ const AdvancedProductManagement = ({ showToast }) => {
     setShowForm(true);
   };
 
-  const deleteProduct = (id) => {
+  const deleteProduct = async (id) => {
     if (confirm('Are you sure you want to delete this product?')) {
-      const updated = products.filter(p => p.id !== id);
-      setProducts(updated);
-      localStorage.setItem('admin-products', JSON.stringify(updated));
-      showToast('Product deleted successfully', 'success');
+      try {
+        const response = await fetch(`/api/products?id=${id}`, {
+          method: 'DELETE'
+        });
+        
+        if (response.ok) {
+          showToast('Product deleted successfully', 'success');
+          loadData();
+        } else {
+          showToast('Failed to delete product', 'error');
+        }
+      } catch (error) {
+        showToast('Failed to delete product', 'error');
+      }
     }
   };
 
-  const duplicateProduct = (product) => {
+  const duplicateProduct = async (product) => {
     const duplicated = {
       ...product,
       id: Date.now(),
@@ -278,10 +284,22 @@ const AdvancedProductManagement = ({ showToast }) => {
       updatedAt: new Date().toISOString()
     };
     
-    const updatedProducts = [...products, duplicated];
-    setProducts(updatedProducts);
-    localStorage.setItem('admin-products', JSON.stringify(updatedProducts));
-    showToast('Product duplicated successfully', 'success');
+    try {
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(duplicated)
+      });
+      
+      if (response.ok) {
+        showToast('Product duplicated successfully', 'success');
+        loadData();
+      } else {
+        showToast('Failed to duplicate product', 'error');
+      }
+    } catch (error) {
+      showToast('Failed to duplicate product', 'error');
+    }
   };
 
   const handleImageUpload = (files, variantIndex = null) => {
