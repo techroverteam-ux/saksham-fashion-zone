@@ -39,6 +39,37 @@ const CartPage = () => {
       return;
     }
 
+    // Create order object for admin panel
+    const order = {
+      id: `ORD${Date.now()}`,
+      customerName: customerInfo.name,
+      email: '',
+      phone: customerInfo.phone,
+      address: customerInfo.address,
+      notes: customerInfo.notes,
+      items: items.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.discountedPrice,
+        quantity: item.quantity,
+        total: item.discountedPrice * item.quantity
+      })),
+      subtotal: getCartTotal(),
+      comboDiscount: getComboDiscount(),
+      total: getFinalTotal(),
+      paymentStatus: 'Pending',
+      deliveryStatus: 'Processing',
+      paymentMethod: 'Cash on Delivery',
+      orderDate: new Date().toISOString().split('T')[0],
+      orderTime: new Date().toLocaleTimeString(),
+      createdAt: new Date().toISOString()
+    };
+
+    // Save order to localStorage for admin panel
+    const existingOrders = JSON.parse(localStorage.getItem('admin-orders') || '[]');
+    existingOrders.push(order);
+    localStorage.setItem('admin-orders', JSON.stringify(existingOrders));
+
     // Create WhatsApp message
     const orderDetails = items.map(item => 
       `${item.name} - Qty: ${item.quantity} - ₹${(item.discountedPrice * item.quantity).toLocaleString()}`
@@ -47,7 +78,7 @@ const CartPage = () => {
     const comboDiscount = getComboDiscount();
     const total = getFinalTotal();
     
-    const message = `🛍️ New Order from Website\n\n👤 Customer Details:\nName: ${customerInfo.name}\nPhone: ${customerInfo.phone}\nAddress: ${customerInfo.address}\n\n📦 Order Details:\n${orderDetails}\n\n💰 Pricing:\nSubtotal: ₹${getCartTotal().toLocaleString()}\n${comboDiscount > 0 ? `Combo Discount: -₹${comboDiscount.toLocaleString()}\n` : ''}Final Total: ₹${total.toLocaleString()}\n\n💳 Payment: Cash on Delivery\n\n${customerInfo.notes ? `📝 Notes: ${customerInfo.notes}` : ''}`;
+    const message = `🛍️ New Order from Website\n\nOrder ID: ${order.id}\n\n👤 Customer Details:\nName: ${customerInfo.name}\nPhone: ${customerInfo.phone}\nAddress: ${customerInfo.address}\n\n📦 Order Details:\n${orderDetails}\n\n💰 Pricing:\nSubtotal: ₹${getCartTotal().toLocaleString()}\n${comboDiscount > 0 ? `Combo Discount: -₹${comboDiscount.toLocaleString()}\n` : ''}Final Total: ₹${total.toLocaleString()}\n\n💳 Payment: Cash on Delivery\n\n${customerInfo.notes ? `📝 Notes: ${customerInfo.notes}` : ''}`;
 
     // Send to WhatsApp
     const whatsappUrl = `https://wa.me/919588253490?text=${encodeURIComponent(message)}`;

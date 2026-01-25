@@ -991,7 +991,14 @@ const AdvancedProductManagement = ({ showToast }) => {
                           <div className="grid grid-cols-4 gap-2 mt-2">
                             {variant.images.map((img) => (
                               <div key={img.id} className="relative group">
-                                <img src={img.url} alt="" className="w-full h-16 object-cover rounded border" />
+                                <img 
+                                  src={img.url} 
+                                  alt="" 
+                                  className="w-full h-16 object-cover rounded border"
+                                  onError={(e) => {
+                                    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjOEIwMDAwIi8+Cjx0ZXh0IHg9IjMyIiB5PSIzMiIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPkltZzwvdGV4dD4KPC9zdmc+';
+                                  }}
+                                />
                                 <button
                                   onClick={() => removeImage(img.id, index)}
                                   className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
