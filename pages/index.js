@@ -174,7 +174,7 @@ const HomePage = () => {
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
         
-        <div className="relative z-10 h-full flex items-end justify-center px-4 pb-20">
+        <div className="relative z-10 h-full flex items-end justify-center px-4 pb-8">
           <div className="text-center w-full max-w-6xl mx-auto">
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-8 sm:mb-12 px-4">
@@ -200,12 +200,7 @@ const HomePage = () => {
           </div>
         </div>
         
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-royal-gold/50 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-royal-gold rounded-full mt-2 animate-pulse"></div>
-          </div>
-        </div>
+
       </section>
 
       {/* Trust Badges */}
