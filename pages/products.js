@@ -823,8 +823,17 @@ const ProductListing = () => {
             ) : displayedProducts.length > 0 ? (
               <>
                 {/* Badge-based sections when no filters are active */}
-                {!hasActiveFilters() && (
-                  <BadgeBasedSections products={products} ProductCard={ProductCard} />
+                {!hasActiveFilters() && sortBy === 'featured' && (
+                  <BadgeBasedSections products={filteredProducts} ProductCard={ProductCard} />
+                )}
+                
+                {/* Sorted grid when sort is changed (no filters) */}
+                {!hasActiveFilters() && sortBy !== 'featured' && (
+                  <div className={`grid gap-4 ${viewMode === 'grid' ? 'grid-cols-3' : 'grid-cols-1'}`}>
+                    {displayedProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
                 )}
                 
                 {/* Regular grid when filters are active */}
