@@ -191,12 +191,15 @@ const HomePage = () => {
             </div>
             
             {/* Offer Banner */}
-            <div className="inline-flex items-center bg-royal-gold/20 backdrop-blur-md rounded-full px-4 sm:px-8 py-3 sm:py-4 border border-royal-gold/30 mx-4">
-              <Clock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-royal-gold animate-pulse" />
-              <span className="text-sm sm:text-lg font-semibold text-center">
-                Special Offer: Buy Saree + Blouse & Get Extra 5% OFF
+            <Link
+              href="/offers"
+              className="group inline-flex items-center bg-royal-gold/20 backdrop-blur-md rounded-full px-4 sm:px-8 py-3 sm:py-4 border border-royal-gold/30 mx-4 cursor-pointer transition-all duration-300 hover:bg-royal-gold hover:border-royal-gold hover:scale-105 hover:shadow-2xl hover:shadow-royal-gold/40"
+            >
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-royal-gold group-hover:text-text-dark transition-colors duration-300 animate-pulse group-hover:animate-spin" />
+              <span className="text-sm sm:text-lg font-semibold text-center text-white group-hover:text-text-dark transition-colors duration-300">
+                Special Offer: Buy Saree + Blouse &amp; Get Extra 5% OFF
               </span>
-            </div>
+            </Link>
           </div>
         </div>
         
