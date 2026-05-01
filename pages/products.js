@@ -247,9 +247,12 @@ const ProductListing = () => {
     return Math.round(product.discountedPrice * 0.95);
   };
 
+  const [zoomedProduct, setZoomedProduct] = useState(null);
+
   const ProductCard = ({ product }) => {
     const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || {name: 'Default', code: 'DEFAULT', hex: '#000000'});
     const [quantity, setQuantity] = useState(1);
+    const [imgHovered, setImgHovered] = useState(false);
     
     const handleQuantityChange = (newQuantity) => {
       if (newQuantity >= 1 && newQuantity <= product.stock) {
@@ -274,26 +277,55 @@ const ProductListing = () => {
     };
     
     return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1 relative">
-      <div className="absolute top-3 right-3 z-10">
+    <div
+      className="bg-white rounded-xl overflow-hidden shadow-md relative group"
+      style={{ transition: 'transform 0.35s cubic-bezier(.4,2,.6,1), box-shadow 0.35s ease' }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 20px 40px rgba(139,0,0,0.18)'; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = ''; }}
+    >
+      <div className="absolute top-3 right-3 z-20">
         <Heart className="w-5 h-5 text-gray-400 hover:text-red-500 transition-colors cursor-pointer" />
       </div>
       
-      <div className="relative">
+      <div
+        className="relative overflow-hidden cursor-zoom-in"
+        onMouseEnter={() => setImgHovered(true)}
+        onMouseLeave={() => setImgHovered(false)}
+        onClick={() => setZoomedProduct(product)}
+      >
         <img 
           src={product.image}
           alt={product.name}
           className="w-full h-64 object-cover rounded-t-xl"
+          style={{ transition: 'transform 0.5s ease', transform: imgHovered ? 'scale(1.1)' : 'scale(1)' }}
           onError={(e) => {
             e.target.src = 'https://via.placeholder.com/400x300/8B0000/FFFFFF?text=Fashion+Item';
           }}
         />
+        {/* Shimmer overlay on hover */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%)',
+            transform: imgHovered ? 'translateX(100%)' : 'translateX(-100%)',
+            transition: 'transform 0.6s ease'
+          }}
+        />
+        {/* Zoom hint */}
+        <div
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{ opacity: imgHovered ? 1 : 0, transition: 'opacity 0.3s ease' }}
+        >
+          <div className="bg-black/50 text-white rounded-full px-4 py-2 text-sm font-semibold backdrop-blur-sm">
+            🔍 Click to Zoom
+          </div>
+        </div>
         
-        <div className="absolute top-3 left-3">
+        <div className="absolute top-3 left-3 z-10">
           <MarketingTags badges={product.badges} />
         </div>
         
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-3 right-3 z-10">
           <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
             {Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)}% OFF
           </span>
@@ -879,6 +911,48 @@ const ProductListing = () => {
       
       <Footer />
       
+      {/* Image Zoom Lightbox */}
+      {zoomedProduct && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(6px)', animation: 'fadeIn 0.25s ease' }}
+          onClick={() => setZoomedProduct(null)}
+        >
+          <div
+            className="relative max-w-2xl w-full bg-white rounded-2xl overflow-hidden shadow-2xl"
+            style={{ animation: 'zoomIn 0.3s cubic-bezier(.4,2,.6,1)' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setZoomedProduct(null)}
+              className="absolute top-3 right-3 z-10 bg-black/60 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <img
+              src={zoomedProduct.image}
+              alt={zoomedProduct.name}
+              className="w-full object-cover max-h-[70vh]"
+              onError={e => e.target.src = 'https://via.placeholder.com/600x700/8B0000/FFFFFF?text=Fashion+Item'}
+            />
+            <div className="p-4 flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-lg text-text-dark">{zoomedProduct.name}</h3>
+                <p className="text-sm text-gray-500">{zoomedProduct.fabric} &bull; {zoomedProduct.occasion}</p>
+              </div>
+              <div className="text-right">
+                <div className="text-xl font-bold text-primary-maroon">₹{zoomedProduct.discountedPrice?.toLocaleString()}</div>
+                <div className="text-sm text-gray-400 line-through">₹{zoomedProduct.originalPrice?.toLocaleString()}</div>
+              </div>
+            </div>
+          </div>
+          <style>{`
+            @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+            @keyframes zoomIn { from { transform: scale(0.7); opacity:0 } to { transform: scale(1); opacity:1 } }
+          `}</style>
+        </div>
+      )}
+
       {/* Product Review Modal */}
       {selectedProduct && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
