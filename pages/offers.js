@@ -124,7 +124,8 @@ const InaugurationSpecial = () => {
   const flashDeals = [
     {
       id: 1,
-      name: "Banarasi Silk Saree",
+      name: "Royal Banarasi Silk Saree",
+      image: "/images/WhatsApp Image 2026-01-24 at 20.58.26.jpeg",
       originalPrice: 12999,
       flashPrice: 7799,
       timeLeft: "2h 30m",
@@ -134,7 +135,8 @@ const InaugurationSpecial = () => {
     },
     {
       id: 2,
-      name: "Embroidered Blouse Set",
+      name: "Embroidered Silk Blouse",
+      image: "/images/WhatsApp Image 2026-01-24 at 20.58.29 (2).jpeg",
       originalPrice: 4999,
       flashPrice: 2999,
       timeLeft: "1h 45m",
@@ -144,7 +146,8 @@ const InaugurationSpecial = () => {
     },
     {
       id: 3,
-      name: "Designer Lehenga",
+      name: "Bridal Lehenga Set",
+      image: "/images/WhatsApp Image 2026-01-24 at 20.58.28.jpeg",
       originalPrice: 18999,
       flashPrice: 11399,
       timeLeft: "3h 15m",
@@ -368,8 +371,14 @@ const InaugurationSpecial = () => {
                   </div>
                 </div>
                 
-                <div className="h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-600 font-medium silk-flow">
-                  {deal.name}
+                <div className="relative overflow-hidden h-64">
+                  <img
+                    src={deal.image}
+                    alt={deal.name}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    onError={(e) => { e.target.src = 'https://via.placeholder.com/400x300/8B0000/FFFFFF?text=' + encodeURIComponent(deal.name); }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
                 </div>
                 
                 <div className="p-6 space-y-4">
