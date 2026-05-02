@@ -5,21 +5,25 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 
+const bgGradients = [
+  'linear-gradient(135deg, #8B0000 0%, #4a0000 50%, #8B0000 100%)',
+  'linear-gradient(135deg, #6B0000 0%, #B8860B 50%, #6B0000 100%)',
+  'linear-gradient(135deg, #4a0000 0%, #7B0000 40%, #B8860B 100%)',
+  'linear-gradient(135deg, #2d0000 0%, #8B0000 50%, #DAA520 100%)',
+  'linear-gradient(135deg, #8B0000 0%, #5C0000 30%, #8B4513 100%)',
+];
+
 const InaugurationSpecial = () => {
   const { getCartCount } = useCart();
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  });
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [bgIndex, setBgIndex] = useState(0);
+  const [tick, setTick] = useState(false);
 
   useEffect(() => {
     const targetDate = new Date('2024-02-01T23:59:59').getTime();
-    
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const difference = targetDate - now;
-      
       if (difference > 0) {
         setTimeLeft({
           hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
@@ -27,9 +31,16 @@ const InaugurationSpecial = () => {
           seconds: Math.floor((difference % (1000 * 60)) / 1000)
         });
       }
+      setTick(t => !t);
     }, 1000);
-
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const bgTimer = setInterval(() => {
+      setBgIndex(i => (i + 1) % bgGradients.length);
+    }, 3000);
+    return () => clearInterval(bgTimer);
   }, []);
 
   const mainOffers = [
@@ -175,51 +186,121 @@ const InaugurationSpecial = () => {
       <Header cartCount={getCartCount()} />
 
       {/* Hero Banner */}
-      <section className="relative bg-gradient-to-br from-primary-maroon via-deep-maroon to-primary-maroon text-white py-12 sm:py-16 overflow-hidden">
-        <div className="absolute inset-0 fabric-texture opacity-30"></div>
-        
-        {/* Floating Elements */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-royal-gold/20 rounded-full blur-xl float-animation"></div>
-        <div className="absolute bottom-20 right-16 w-32 h-32 bg-royal-gold/10 rounded-full blur-2xl float-animation" style={{animationDelay: '1s'}}></div>
-        
+      <section
+        className="relative text-white py-12 sm:py-20 overflow-hidden"
+        style={{
+          background: bgGradients[bgIndex],
+          transition: 'background 1.5s ease-in-out'
+        }}
+      >
+        {/* Animated fabric texture */}
+        <div className="absolute inset-0 fabric-texture opacity-20"></div>
+
+        {/* Animated floating orbs */}
+        <div className="absolute top-8 left-8 w-24 h-24 bg-royal-gold/30 rounded-full blur-2xl float-animation"></div>
+        <div className="absolute top-1/2 left-4 w-16 h-16 bg-white/10 rounded-full blur-xl float-animation" style={{animationDelay:'0.8s'}}></div>
+        <div className="absolute bottom-12 right-12 w-36 h-36 bg-royal-gold/20 rounded-full blur-3xl float-animation" style={{animationDelay:'1.5s'}}></div>
+        <div className="absolute top-16 right-1/4 w-12 h-12 bg-white/10 rounded-full blur-lg float-animation" style={{animationDelay:'2s'}}></div>
+        <div className="absolute bottom-8 left-1/3 w-20 h-20 bg-royal-gold/15 rounded-full blur-2xl float-animation" style={{animationDelay:'0.4s'}}></div>
+
+        {/* Sparkle particles */}
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1.5 h-1.5 bg-royal-gold rounded-full animate-ping"
+            style={{
+              top: `${10 + i * 11}%`,
+              left: `${5 + i * 12}%`,
+              animationDelay: `${i * 0.4}s`,
+              animationDuration: '2s',
+              opacity: 0.6
+            }}
+          />
+        ))}
+
         <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
-          <div className="inline-flex items-center badge badge-gold mb-4 sm:mb-6 text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3 gold-shimmer">
+          {/* Badge with shimmer */}
+          <div
+            className="inline-flex items-center badge badge-gold mb-6 text-sm sm:text-base px-5 py-2 gold-shimmer"
+            style={{ animation: 'badgePop 0.6s cubic-bezier(.4,2,.6,1)' }}
+          >
             <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
             1st February 2024 - Inauguration Day Only
           </div>
-          
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 leading-tight">
-            <span className="block">Grand Opening</span>
-            <span className="block text-royal-gold shimmer">Offers</span>
+
+          {/* Heading with letter animation */}
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            <span
+              className="block"
+              style={{ animation: 'slideDown 0.7s ease both' }}
+            >
+              Grand Opening
+            </span>
+            <span
+              className="block text-royal-gold"
+              style={{
+                animation: 'slideDown 0.9s ease both',
+                textShadow: '0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,215,0,0.3)'
+              }}
+            >
+              Offers ✨
+            </span>
           </h1>
-          
-          <p className="text-lg sm:text-xl md:text-2xl mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed">
-            Celebrate with us and enjoy <span className="text-royal-gold font-bold">exclusive discounts</span> available only today!
+
+          <p
+            className="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto leading-relaxed"
+            style={{ animation: 'fadeUp 1s ease both', animationDelay: '0.3s' }}
+          >
+            Celebrate with us and enjoy{' '}
+            <span className="text-royal-gold font-bold" style={{ textShadow: '0 0 15px rgba(255,215,0,0.5)' }}>
+              exclusive discounts
+            </span>{' '}
+            available only today!
           </p>
-          
+
           {/* Countdown Timer */}
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 max-w-lg mx-auto mb-8 sm:mb-12 border border-royal-gold/30">
-            <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-royal-gold">Offers End In:</h3>
-            <div className="flex justify-center gap-3 sm:gap-6">
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold font-playfair">{timeLeft.hours}</div>
-                <div className="text-xs sm:text-sm uppercase tracking-wider">Hours</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold font-playfair">{timeLeft.minutes}</div>
-                <div className="text-xs sm:text-sm uppercase tracking-wider">Minutes</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold font-playfair">{timeLeft.seconds}</div>
-                <div className="text-xs sm:text-sm uppercase tracking-wider">Seconds</div>
-              </div>
+          <div
+            className="bg-white/10 backdrop-blur-md rounded-2xl p-5 sm:p-8 max-w-lg mx-auto mb-10 border border-royal-gold/40 shadow-2xl"
+            style={{ animation: 'fadeUp 1s ease both', animationDelay: '0.5s' }}
+          >
+            <h3 className="text-lg sm:text-xl font-bold mb-5 text-royal-gold tracking-widest uppercase">⏳ Offers End In</h3>
+            <div className="flex justify-center gap-4 sm:gap-8">
+              {[{val: timeLeft.hours, label:'Hours'}, {val: timeLeft.minutes, label:'Minutes'}, {val: timeLeft.seconds, label:'Seconds'}].map(({val, label}, i) => (
+                <div key={label} className="text-center">
+                  <div
+                    className="w-16 h-16 sm:w-20 sm:h-20 bg-white/15 border-2 border-royal-gold/50 rounded-xl flex items-center justify-center mb-2 shadow-lg"
+                    style={{
+                      transform: tick && label === 'Seconds' ? 'scale(1.08)' : 'scale(1)',
+                      transition: 'transform 0.15s ease',
+                      boxShadow: '0 0 15px rgba(255,215,0,0.2)'
+                    }}
+                  >
+                    <span className="text-2xl sm:text-3xl font-bold font-playfair">
+                      {String(val).padStart(2,'0')}
+                    </span>
+                  </div>
+                  <div className="text-xs uppercase tracking-widest text-royal-gold/80">{label}</div>
+                </div>
+              ))}
             </div>
           </div>
-          
-          <div className="text-lg sm:text-xl font-bold text-royal-gold animate-pulse">
-            Limited Time Only - Don't Miss Out!
+
+          <div
+            className="text-lg sm:text-xl font-bold text-royal-gold"
+            style={{
+              animation: 'pulse 1.5s ease-in-out infinite',
+              textShadow: '0 0 20px rgba(255,215,0,0.5)'
+            }}
+          >
+            🔥 Limited Time Only - Don't Miss Out!
           </div>
         </div>
+
+        <style>{`
+          @keyframes slideDown { from { opacity:0; transform:translateY(-30px) } to { opacity:1; transform:translateY(0) } }
+          @keyframes fadeUp { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
+          @keyframes badgePop { from { opacity:0; transform:scale(0.5) } to { opacity:1; transform:scale(1) } }
+        `}</style>
       </section>
 
       {/* Main Offers Grid */}
