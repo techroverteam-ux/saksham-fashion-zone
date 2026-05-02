@@ -17,7 +17,18 @@ const InaugurationSpecial = () => {
   const { getCartCount } = useCart();
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [bgIndex, setBgIndex] = useState(0);
+  const [catBgIndex, setCatBgIndex] = useState(0);
   const [tick, setTick] = useState(false);
+
+  const catBgGradients = [
+    'linear-gradient(135deg, #f8f0ff 0%, #e8d5f5 50%, #f0e6ff 100%)',
+    'linear-gradient(135deg, #fff0f5 0%, #ffd6e7 50%, #ffe8f0 100%)',
+    'linear-gradient(135deg, #f0fff4 0%, #c6f6d5 50%, #e6ffed 100%)',
+    'linear-gradient(135deg, #fffbf0 0%, #fef3c7 50%, #fff8e1 100%)',
+    'linear-gradient(135deg, #f0f4ff 0%, #dbeafe 50%, #e8f0ff 100%)',
+  ];
+
+  const catBg = catBgGradients[catBgIndex];
 
   useEffect(() => {
     const targetDate = new Date('2024-02-01T23:59:59').getTime();
@@ -41,6 +52,13 @@ const InaugurationSpecial = () => {
       setBgIndex(i => (i + 1) % bgGradients.length);
     }, 3000);
     return () => clearInterval(bgTimer);
+  }, []);
+
+  useEffect(() => {
+    const catTimer = setInterval(() => {
+      setCatBgIndex(i => (i + 1) % 5);
+    }, 2500);
+    return () => clearInterval(catTimer);
   }, []);
 
   const mainOffers = [
@@ -437,7 +455,7 @@ const InaugurationSpecial = () => {
       </section>
 
       {/* Category Offers */}
-      <section className="py-20 bg-white">
+      <section className="py-20 relative overflow-hidden" style={{ background: catBg, transition: 'background 1.5s ease-in-out' }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-text-dark mb-6">
@@ -451,23 +469,54 @@ const InaugurationSpecial = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {categoryOffers.map((category, index) => (
-              <div key={index} className="group cursor-pointer">
-                <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-                  <div className={`h-64 bg-gradient-to-br ${category.color} flex items-center justify-center text-white relative`}>
+              <div
+                key={index}
+                className="group cursor-pointer"
+                style={{ animation: `fadeUp 0.5s ease both`, animationDelay: `${index * 0.1}s` }}
+              >
+                <div
+                  className="relative overflow-hidden rounded-2xl shadow-2xl"
+                  style={{ transition: 'transform 0.35s cubic-bezier(.4,2,.6,1), box-shadow 0.35s ease' }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-10px) scale(1.03)'; e.currentTarget.style.boxShadow = '0 25px 50px rgba(0,0,0,0.25)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = ''; }}
+                >
+                  <div className={`h-64 bg-gradient-to-br ${category.color} flex items-center justify-center text-white relative overflow-hidden`}>
                     <div className="absolute inset-0 bg-black/20"></div>
+                    {/* Shimmer sweep on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    {/* Rotating ring */}
+                    <div
+                      className="absolute inset-0 rounded-2xl border-4 border-white/0 group-hover:border-white/30 transition-all duration-500"
+                      style={{ transform: 'scale(0.95)', transition: 'all 0.4s ease' }}
+                    ></div>
                     <div className="relative z-10 text-center p-6">
-                      <div className="badge bg-white/20 text-white mb-4">{category.badge}</div>
-                      <h3 className="text-2xl font-bold mb-2">{category.category}</h3>
-                      <div className="text-4xl font-bold mb-2">{category.discount}</div>
+                      <div
+                        className="inline-block badge bg-white/20 text-white mb-4 group-hover:bg-white/40 transition-colors duration-300"
+                      >
+                        {category.badge}
+                      </div>
+                      <h3
+                        className="text-2xl font-bold mb-2 group-hover:scale-105 transition-transform duration-300 inline-block"
+                      >
+                        {category.category}
+                      </h3>
+                      <div
+                        className="text-5xl font-bold mb-2 group-hover:text-yellow-300 transition-colors duration-300"
+                        style={{ textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}
+                      >
+                        {category.discount}
+                      </div>
                     </div>
                     <div className="absolute top-4 right-4">
-                      <span className="bg-white text-gray-800 px-3 py-1 rounded-full text-sm font-bold">
+                      <span
+                        className="bg-white text-gray-800 px-3 py-1 rounded-full text-sm font-bold group-hover:bg-yellow-300 group-hover:scale-110 transition-all duration-300 inline-block"
+                      >
                         {category.discount}
                       </span>
                     </div>
                   </div>
-                  
-                  <div className="bg-white p-6">
+
+                  <div className="bg-white p-6 group-hover:bg-gray-50 transition-colors duration-300">
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600">Original:</span>
@@ -475,13 +524,17 @@ const InaugurationSpecial = () => {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="font-semibold">Today's Price:</span>
-                        <span className="text-xl font-bold text-primary-maroon">{category.discountedPrice}</span>
+                        <span className="text-xl font-bold text-primary-maroon group-hover:scale-105 transition-transform duration-300 inline-block">{category.discountedPrice}</span>
                       </div>
                     </div>
-                    
-                    <button className="btn-primary w-full mt-6 group-hover:scale-105 transition-transform">
-                      Shop Now
-                    </button>
+
+                    <Link
+                      href="/products"
+                      className="btn-primary w-full mt-6 text-center block relative overflow-hidden group/btn"
+                    >
+                      <span className="relative z-10">Shop Now →</span>
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-500"></span>
+                    </Link>
                   </div>
                 </div>
               </div>
