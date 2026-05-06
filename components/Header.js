@@ -93,13 +93,37 @@ const Header = ({ cartCount = 0, transparent = false }) => {
             </div>
             <div>
               <div className={`text-lg sm:text-xl font-bold transition-all duration-300 group-hover:tracking-wide ${
-                transparent && !scrolled ? 'text-white drop-shadow-lg' : 'text-primary-maroon'
-              }`}>Saksham Fashion Zone</div>
+                transparent && !scrolled ? 'drop-shadow-lg' : ''
+              }`}>
+                {['S','a','k','s','h','a','m',' ','F','a','s','h','i','o','n',' ','Z','o','n','e'].map((char, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      display: char === ' ' ? 'inline' : 'inline-block',
+                      animation: char !== ' ' ? `letterColor 4s ease-in-out infinite` : 'none',
+                      animationDelay: `${i * 0.15}s`,
+                    }}
+                  >
+                    {char === ' ' ? '\u00A0' : char}
+                  </span>
+                ))}
+              </div>
               <div className={`text-xs font-medium hidden sm:block drop-shadow transition-all duration-300 ${
                 transparent && !scrolled ? 'text-white/90' : 'text-royal-gold'
               }`}>Where Elegance Meets Tradition</div>
             </div>
           </Link>
+
+          <style>{`
+            @keyframes letterColor {
+              0%   { color: #8B0000; }
+              20%  { color: #FFD700; }
+              40%  { color: #E53E3E; }
+              60%  { color: #D69E2E; }
+              80%  { color: #805AD5; }
+              100% { color: #8B0000; }
+            }
+          `}</style>
           
           <nav className="hidden md:flex space-x-8">
             {navLinks.map(({ href, label }, idx) => (
@@ -178,23 +202,36 @@ const Header = ({ cartCount = 0, transparent = false }) => {
               <div className="hidden sm:flex items-center space-x-2">
                 <button
                   onClick={() => handleAuthClick('login')}
-                  className={`px-3 py-2 rounded-lg transition-all duration-300 font-medium hover:scale-105 ${
-                    transparent && !scrolled ? 'text-white hover:bg-white/10' : 'text-primary-maroon hover:bg-primary-maroon/10'
+                  className={`px-3 py-2 rounded-lg font-medium relative overflow-hidden group/login transition-all duration-300 hover:scale-105 ${
+                    transparent && !scrolled ? 'text-white hover:bg-white/10' : 'text-primary-maroon'
                   }`}
+                  style={{ transition: 'all 0.3s ease' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'linear-gradient(135deg,#667eea,#764ba2)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(102,126,234,0.5)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = ''; e.currentTarget.style.color = ''; e.currentTarget.style.boxShadow = ''; }}
                 >
-                  Login
+                  <span className="relative z-10">Login</span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/login:translate-x-full transition-transform duration-500"></span>
                 </button>
                 <button
                   onClick={() => handleAuthClick('signup')}
-                  className="relative overflow-hidden bg-primary-maroon text-white px-4 py-2 rounded-lg hover:bg-deep-maroon transition-all duration-300 font-medium hover:scale-105 hover:shadow-lg group"
+                  className="relative overflow-hidden px-4 py-2 rounded-lg font-medium group/signup transition-all duration-300 hover:scale-105"
+                  style={{ background: 'linear-gradient(135deg,#f093fb,#f5576c)', color: '#fff', boxShadow: '0 4px 15px rgba(245,87,108,0.4)', transition: 'all 0.3s ease' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'linear-gradient(135deg,#4facfe,#00f2fe)'; e.currentTarget.style.boxShadow = '0 6px 25px rgba(79,172,254,0.6)'; e.currentTarget.style.transform = 'scale(1.08) translateY(-2px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'linear-gradient(135deg,#f093fb,#f5576c)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(245,87,108,0.4)'; e.currentTarget.style.transform = 'scale(1) translateY(0)'; }}
                 >
-                  <span className="relative z-10">Sign Up</span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></span>
+                  <span className="relative z-10">Sign Up ✨</span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/signup:translate-x-full transition-transform duration-500"></span>
                 </button>
               </div>
             )}
             
-            <a href="tel:9588253490" className="call-btn group">
+            <a
+              href="tel:9588253490"
+              className="call-btn group relative overflow-hidden"
+              style={{ transition: 'all 0.3s ease' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'linear-gradient(135deg,#f7971e,#ffd200)'; e.currentTarget.style.color = '#1a1a1a'; e.currentTarget.style.transform = 'scale(1.08) translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(255,210,0,0.5)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = ''; e.currentTarget.style.color = ''; e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
+            >
               <Phone className="w-4 h-4 mr-2 group-hover:animate-bounce" />
               <span>Call Now</span>
               <div className="call-pulse"></div>
