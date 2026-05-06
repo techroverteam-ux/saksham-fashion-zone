@@ -431,26 +431,87 @@ const HomePage = () => {
           </div>
           
           {/* Sub Categories */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative">
+            {/* Animated background layer */}
+            <div className="absolute inset-0 -z-10 overflow-hidden rounded-2xl">
+              <div className="absolute inset-0" style={{ animation: 'subCatBg 6s ease-in-out infinite' }} />
+              {/* Floating gradient orbs */}
+              <div className="absolute top-0 left-0 w-40 h-40 rounded-full blur-3xl opacity-30 float-animation" style={{ background: 'linear-gradient(135deg,#f093fb,#f5576c)', animationDelay: '0s' }} />
+              <div className="absolute bottom-0 right-0 w-48 h-48 rounded-full blur-3xl opacity-25 float-animation" style={{ background: 'linear-gradient(135deg,#4facfe,#00f2fe)', animationDelay: '1.5s' }} />
+              <div className="absolute top-1/2 left-1/2 w-32 h-32 rounded-full blur-2xl opacity-20 float-animation" style={{ background: 'linear-gradient(135deg,#f7971e,#ffd200)', animationDelay: '3s' }} />
+            </div>
+
             {[
-              { name: 'Banarasi Sarees', count: featuredProducts.filter(p => p.fabric === 'Banarasi Silk' && p.category === 'Sarees').length },
-              { name: 'Silk Blouses', count: featuredProducts.filter(p => p.fabric === 'Pure Silk' && p.category === 'Blouses').length },
-              { name: 'Cotton Sarees', count: featuredProducts.filter(p => p.fabric === 'Cotton' && p.category === 'Sarees').length },
-              { name: 'Party Wear', count: featuredProducts.filter(p => p.occasion === 'Party').length },
-              { name: 'Bridal Collection', count: featuredProducts.filter(p => p.collection === 'Bridal Collection').length },
-              { name: 'Festive Wear', count: featuredProducts.filter(p => p.occasion === 'Festival').length },
-              { name: 'Casual Wear', count: featuredProducts.filter(p => p.occasion === 'Casual').length },
-              { name: 'Designer Pieces', count: featuredProducts.filter(p => p.collection === 'Contemporary').length }
+              { name: 'Banarasi Sarees', count: featuredProducts.filter(p => p.fabric === 'Banarasi Silk' && p.category === 'Sarees').length, color: '#E53E3E', glow: 'rgba(229,62,62,0.3)' },
+              { name: 'Silk Blouses', count: featuredProducts.filter(p => p.fabric === 'Pure Silk' && p.category === 'Blouses').length, color: '#D69E2E', glow: 'rgba(214,158,46,0.3)' },
+              { name: 'Cotton Sarees', count: featuredProducts.filter(p => p.fabric === 'Cotton' && p.category === 'Sarees').length, color: '#38A169', glow: 'rgba(56,161,105,0.3)' },
+              { name: 'Party Wear', count: featuredProducts.filter(p => p.occasion === 'Party').length, color: '#3182CE', glow: 'rgba(49,130,206,0.3)' },
+              { name: 'Bridal Collection', count: featuredProducts.filter(p => p.collection === 'Bridal Collection').length, color: '#805AD5', glow: 'rgba(128,90,213,0.3)' },
+              { name: 'Festive Wear', count: featuredProducts.filter(p => p.occasion === 'Festival').length, color: '#DD6B20', glow: 'rgba(221,107,32,0.3)' },
+              { name: 'Casual Wear', count: featuredProducts.filter(p => p.occasion === 'Casual').length, color: '#319795', glow: 'rgba(49,151,149,0.3)' },
+              { name: 'Designer Pieces', count: featuredProducts.filter(p => p.collection === 'Contemporary').length, color: '#D53F8C', glow: 'rgba(213,63,140,0.3)' }
             ].map((item, index) => (
-              <Link 
-                key={index} 
+              <Link
+                key={index}
                 href={`/products?filter=${encodeURIComponent(item.name.toLowerCase())}`}
-                className="bg-soft-beige rounded-xl p-4 text-center hover:bg-primary-maroon/10 transition-colors cursor-pointer"
+                className="bg-soft-beige rounded-xl p-4 text-center cursor-pointer relative overflow-hidden group"
+                style={{
+                  transition: 'transform 0.35s cubic-bezier(.4,2,.6,1), box-shadow 0.35s ease, background 0.3s ease',
+                  animation: `fadeUp 0.5s ease both`,
+                  animationDelay: `${index * 0.08}s`
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-8px) scale(1.03)';
+                  e.currentTarget.style.boxShadow = `0 15px 35px ${item.glow}`;
+                  e.currentTarget.style.background = `linear-gradient(135deg, rgba(255,255,255,0.9), ${item.color}15)`;
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = '';
+                  e.currentTarget.style.background = '';
+                }}
               >
-                <h4 className="font-semibold text-text-dark mb-1">{item.name}</h4>
-                <p className="text-sm text-primary-maroon font-medium">{item.count}+ Items</p>
+                {/* Shimmer sweep */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                {/* Top accent bar */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-1 transition-all duration-500"
+                  style={{ background: `linear-gradient(90deg, ${item.color}, transparent)`, width: '0%' }}
+                  ref={el => {
+                    if (el) {
+                      el.parentElement.addEventListener('mouseenter', () => el.style.width = '100%');
+                      el.parentElement.addEventListener('mouseleave', () => el.style.width = '0%');
+                    }
+                  }}
+                />
+                <h4
+                  className="font-semibold text-text-dark mb-1 relative z-10 transition-all duration-300 group-hover:tracking-wide"
+                  style={{ transition: 'color 0.3s ease' }}
+                  onMouseEnter={e => e.currentTarget.style.color = item.color}
+                  onMouseLeave={e => e.currentTarget.style.color = ''}
+                >
+                  {item.name}
+                </h4>
+                <p
+                  className="text-sm text-primary-maroon font-medium relative z-10 transition-all duration-300"
+                  style={{ transition: 'transform 0.3s ease, color 0.3s ease' }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.color = item.color; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.color = ''; }}
+                >
+                  {item.count}+ Items
+                </p>
               </Link>
             ))}
+
+            <style>{`
+              @keyframes subCatBg {
+                0%   { background: linear-gradient(135deg, #fffef7 0%, #fef9f0 100%); }
+                25%  { background: linear-gradient(135deg, #fff0f5 0%, #ffe8f0 100%); }
+                50%  { background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%); }
+                75%  { background: linear-gradient(135deg, #f0f4ff 0%, #e8f0ff 100%); }
+                100% { background: linear-gradient(135deg, #fffef7 0%, #fef9f0 100%); }
+              }
+            `}</style>
           </div>
           
           <div className="text-center mt-8">
