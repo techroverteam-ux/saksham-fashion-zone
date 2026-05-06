@@ -207,19 +207,95 @@ const HomePage = () => {
       </section>
 
       {/* Trust Badges */}
-      <section className="py-16 bg-ivory-white relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-soft-beige/50 via-white to-soft-beige/50"></div>
+      <section className="py-16 relative overflow-hidden" id="trust-section">
+        {/* Auto-changing animated background */}
+        <div
+          className="absolute inset-0"
+          style={{ animation: 'trustBg 8s ease-in-out infinite' }}
+        />
+        {/* Floating orbs */}
+        <div className="absolute top-4 left-8 w-32 h-32 rounded-full blur-3xl opacity-40 float-animation" style={{ background: '#FFD700', animationDelay: '0s' }} />
+        <div className="absolute bottom-4 right-8 w-40 h-40 rounded-full blur-3xl opacity-30 float-animation" style={{ background: '#8B0000', animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 w-24 h-24 rounded-full blur-2xl opacity-25 float-animation" style={{ background: '#805AD5', animationDelay: '2s' }} />
+        {/* Sparkle dots */}
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="absolute w-2 h-2 rounded-full animate-ping"
+            style={{ background: ['#FFD700','#8B0000','#38A169','#3182CE','#f093fb','#f7971e'][i], top: `${15 + i*14}%`, left: `${8 + i*16}%`, animationDelay: `${i*0.5}s`, animationDuration: '2.5s', opacity: 0.7 }}
+          />
+        ))}
+
         <div className="relative z-10 max-w-full mx-auto px-2">
           <div className="grid md:grid-cols-3 gap-8">
             {trustBadges.map((badge, index) => (
-              <div key={index} className="trust-badge text-center">
-                <div className="mb-4">{badge.icon}</div>
-                <h3 className="text-xl font-semibold text-text-dark mb-2">{badge.title}</h3>
+              <div
+                key={index}
+                className="trust-badge text-center group cursor-pointer"
+                style={{
+                  animation: `badgeFadeIn 0.6s ease both`,
+                  animationDelay: `${index * 0.2}s`,
+                  transition: 'transform 0.35s cubic-bezier(.4,2,.6,1), box-shadow 0.35s ease'
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-10px) scale(1.04)';
+                  e.currentTarget.style.boxShadow = `0 20px 40px ${['rgba(139,0,0,0.2)','rgba(255,215,0,0.25)','rgba(56,161,105,0.2)'][index]}`;
+                  e.currentTarget.style.background = ['linear-gradient(135deg,#fff5f5,#ffe4e4)','linear-gradient(135deg,#fffbf0,#fff3cd)','linear-gradient(135deg,#f0fff4,#d4edda)'][index];
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = '';
+                  e.currentTarget.style.background = '';
+                }}
+              >
+                <div
+                  className="mb-4 flex justify-center"
+                  style={{ transition: 'transform 0.3s ease' }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'rotate(15deg) scale(1.2)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'rotate(0) scale(1)'}
+                >
+                  {badge.icon}
+                </div>
+                <h3
+                  className="text-xl font-semibold text-text-dark mb-2 group-hover:tracking-wide transition-all duration-300"
+                  style={{ transition: 'color 0.3s ease' }}
+                  onMouseEnter={e => e.currentTarget.style.color = ['#8B0000','#B8860B','#276749'][index]}
+                  onMouseLeave={e => e.currentTarget.style.color = ''}
+                >
+                  {badge.title}
+                </h3>
                 <p className="text-gray-600">{badge.desc}</p>
+                {/* Bottom glow bar */}
+                <div
+                  className="mt-3 h-1 rounded-full mx-auto transition-all duration-500"
+                  style={{
+                    width: '0%',
+                    background: ['linear-gradient(90deg,#8B0000,#FFD700)','linear-gradient(90deg,#FFD700,#f7971e)','linear-gradient(90deg,#38A169,#68D391)'][index]
+                  }}
+                  ref={el => {
+                    if (el) {
+                      el.parentElement.addEventListener('mouseenter', () => el.style.width = '80%');
+                      el.parentElement.addEventListener('mouseleave', () => el.style.width = '0%');
+                    }
+                  }}
+                />
               </div>
             ))}
           </div>
         </div>
+
+        <style>{`
+          @keyframes trustBg {
+            0%   { background: linear-gradient(135deg, #fffef7 0%, #fff8e1 50%, #fef9f0 100%); }
+            20%  { background: linear-gradient(135deg, #fff0f5 0%, #ffe4f0 50%, #fff5fb 100%); }
+            40%  { background: linear-gradient(135deg, #f0fff4 0%, #e6ffed 50%, #f5fff8 100%); }
+            60%  { background: linear-gradient(135deg, #f0f4ff 0%, #e8f0ff 50%, #f5f8ff 100%); }
+            80%  { background: linear-gradient(135deg, #fdf0ff 0%, #f5e6ff 50%, #faf0ff 100%); }
+            100% { background: linear-gradient(135deg, #fffef7 0%, #fff8e1 50%, #fef9f0 100%); }
+          }
+          @keyframes badgeFadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+          }
+        `}</style>
       </section>
 
       {/* Collections Section */}
