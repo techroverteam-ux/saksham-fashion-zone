@@ -523,12 +523,71 @@ const HomePage = () => {
       </section>
 
       {/* Marketing Carousels */}
-      <section className="py-16 bg-gradient-to-br from-soft-beige/30 to-ivory-white">
-        <div className="w-full px-2 space-y-8">
+      <section className="py-16 relative overflow-hidden">
+        {/* Auto-changing animated background */}
+        <div
+          className="absolute inset-0"
+          style={{ animation: 'marketingBg 10s ease-in-out infinite' }}
+        />
+        {/* Large floating gradient orbs */}
+        <div className="absolute top-10 left-10 w-64 h-64 rounded-full blur-3xl opacity-25 float-animation" style={{ background: 'linear-gradient(135deg,#f093fb,#f5576c)', animationDelay: '0s' }} />
+        <div className="absolute bottom-10 right-10 w-72 h-72 rounded-full blur-3xl opacity-20 float-animation" style={{ background: 'linear-gradient(135deg,#4facfe,#00f2fe)', animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-1/3 w-48 h-48 rounded-full blur-2xl opacity-15 float-animation" style={{ background: 'linear-gradient(135deg,#f7971e,#ffd200)', animationDelay: '4s' }} />
+        <div className="absolute bottom-1/3 right-1/4 w-56 h-56 rounded-full blur-3xl opacity-18 float-animation" style={{ background: 'linear-gradient(135deg,#667eea,#764ba2)', animationDelay: '6s' }} />
+        
+        {/* Sparkle dots scattered across */}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 rounded-full animate-ping"
+            style={{
+              background: ['#FFD700','#E53E3E','#38A169','#3182CE','#805AD5','#f093fb','#f7971e','#4facfe'][i % 8],
+              top: `${5 + (i * 4.5)}%`,
+              left: `${3 + (i * 4.8)}%`,
+              animationDelay: `${i * 0.3}s`,
+              animationDuration: '2.5s',
+              opacity: 0.6
+            }}
+          />
+        ))}
+        
+        {/* Floating mini stars */}
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={`star-${i}`}
+            className="absolute text-yellow-400 opacity-40"
+            style={{
+              top: `${10 + (i * 7)}%`,
+              right: `${5 + (i * 8)}%`,
+              animation: 'float 4s ease-in-out infinite',
+              animationDelay: `${i * 0.4}s`,
+              fontSize: ['12px','16px','14px','18px'][i % 4]
+            }}
+          >
+            ✨
+          </div>
+        ))}
+
+        <div className="relative z-10 w-full px-2 space-y-8">
+          <style>{`
+            @keyframes marketingBg {
+              0%   { background: linear-gradient(135deg, #fef9f0 0%, #fff8e1 50%, #fffef7 100%); }
+              20%  { background: linear-gradient(135deg, #fff0f5 0%, #ffe4f0 50%, #fff5fb 100%); }
+              40%  { background: linear-gradient(135deg, #f0fff4 0%, #e6ffed 50%, #f5fff8 100%); }
+              60%  { background: linear-gradient(135deg, #f0f4ff 0%, #e8f0ff 50%, #f5f8ff 100%); }
+              80%  { background: linear-gradient(135deg, #fdf0ff 0%, #f5e6ff 50%, #faf0ff 100%); }
+              100% { background: linear-gradient(135deg, #fef9f0 0%, #fff8e1 50%, #fffef7 100%); }
+            }
+          `}</style>
           {/* Trending Now */}
-          <div className="">
+          <div>
             <div className="flex items-center gap-2 mb-6">
-              <h3 className="text-2xl font-bold text-text-dark">Trending Now</h3>
+              <h3
+                className="text-2xl font-bold"
+                style={{ background: 'linear-gradient(90deg,#E53E3E,#D69E2E)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+              >
+                🔥 Trending Now
+              </h3>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {featuredProducts.filter(p => p.badges?.includes('Trending')).slice(0, 4).map((product) => (
@@ -587,9 +646,14 @@ const HomePage = () => {
           </div>
           
           {/* Bestsellers */}
-          <div className="">
+          <div>
             <div className="flex items-center gap-2 mb-6">
-              <h3 className="text-2xl font-bold text-text-dark">Bestsellers</h3>
+              <h3
+                className="text-2xl font-bold"
+                style={{ background: 'linear-gradient(90deg,#3182CE,#805AD5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+              >
+                ⭐ Bestsellers
+              </h3>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {featuredProducts.filter(p => p.badges?.includes('Bestseller')).slice(0, 4).map((product) => (
@@ -648,9 +712,14 @@ const HomePage = () => {
           </div>
           
           {/* New Arrivals */}
-          <div className="">
+          <div>
             <div className="flex items-center gap-2 mb-6">
-              <h3 className="text-2xl font-bold text-text-dark">New Arrivals</h3>
+              <h3
+                className="text-2xl font-bold"
+                style={{ background: 'linear-gradient(90deg,#38A169,#319795)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+              >
+                🆕 New Arrivals
+              </h3>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {featuredProducts.filter(p => p.badges?.includes('New Arrival')).slice(0, 4).map((product) => (
