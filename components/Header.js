@@ -8,8 +8,25 @@ const Header = ({ cartCount = 0, transparent = false }) => {
   const [scrolled, setScrolled] = useState(false);
   const [cartBounce, setCartBounce] = useState(false);
   const [activeLink, setActiveLink] = useState('');
+  const [headerBgIndex, setHeaderBgIndex] = useState(0);
   const prevCartCount = useRef(cartCount);
   const { user, setShowAuth, setAuthMode, logout } = useAuth();
+
+  const headerBgs = [
+    'rgba(255,255,255,0.97)',
+    'rgba(255,248,240,0.97)',
+    'rgba(255,240,248,0.97)',
+    'rgba(240,248,255,0.97)',
+    'rgba(248,255,240,0.97)',
+  ];
+
+  const navColors = [
+    { hover: '#E53E3E', glow: 'rgba(229,62,62,0.3)' },
+    { hover: '#D69E2E', glow: 'rgba(214,158,46,0.3)' },
+    { hover: '#38A169', glow: 'rgba(56,161,105,0.3)' },
+    { hover: '#3182CE', glow: 'rgba(49,130,206,0.3)' },
+    { hover: '#805AD5', glow: 'rgba(128,90,213,0.3)' },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -25,10 +42,12 @@ const Header = ({ cartCount = 0, transparent = false }) => {
     }
   }, [cartCount]);
 
-  const handleAuthClick = (mode) => {
-    setAuthMode(mode);
-    setShowAuth(true);
-  };
+  useEffect(() => {
+    if (!transparent || scrolled) {
+      const t = setInterval(() => setHeaderBgIndex(i => (i + 1) % headerBgs.length), 3000);
+      return () => clearInterval(t);
+    }
+  }, [transparent, scrolled]);
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -38,12 +57,24 @@ const Header = ({ cartCount = 0, transparent = false }) => {
     { href: '/contact', label: 'Contact' },
   ];
 
+  const handleAuthClick = (mode) => {
+    setAuthMode(mode);
+    setShowAuth(true);
+  };
+
+  const headerStyle = (!transparent || scrolled)
+    ? { background: headerBgs[headerBgIndex], transition: 'background 1.5s ease, all 0.4s ease', backdropFilter: 'blur(12px)' }
+    : { transition: 'all 0.4s ease' };
+
   return (
-    <header style={{ transition: 'all 0.4s ease' }} className={`${
+    <header
+      style={headerStyle}
+      className={`${
         transparent && !scrolled
           ? 'bg-transparent backdrop-blur-sm absolute top-0 left-0 right-0 z-50'
-          : 'bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-royal-gold/20'
-      } ${scrolled ? 'shadow-xl' : ''}`}>
+          : 'shadow-lg sticky top-0 z-50 border-b border-royal-gold/20'
+      } ${scrolled ? 'shadow-xl' : ''}`}
+    >
       <div className={`max-w-7xl mx-auto px-4 transition-all duration-400 ${scrolled ? 'py-2' : 'py-4'}`}>
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-3 group">
@@ -71,30 +102,43 @@ const Header = ({ cartCount = 0, transparent = false }) => {
           </Link>
           
           <nav className="hidden md:flex space-x-8">
-            {navLinks.map(({ href, label }) => (
+            {navLinks.map(({ href, label }, idx) => (
               <Link
                 key={href}
                 href={href}
                 onMouseEnter={() => setActiveLink(href)}
                 onMouseLeave={() => setActiveLink('')}
-                className={`nav-link group relative overflow-hidden ${
-                  transparent && !scrolled
-                    ? 'text-white hover:text-white/80'
-                    : 'text-text-dark hover:text-primary-maroon'
-                }`}
+                className="nav-link group relative overflow-hidden"
+                style={{
+                  color: activeLink === href ? navColors[idx].hover : (transparent && !scrolled ? '#fff' : '#2D3748'),
+                  textShadow: activeLink === href ? `0 0 12px ${navColors[idx].glow}, 0 0 24px ${navColors[idx].glow}` : 'none',
+                  transition: 'all 0.3s ease'
+                }}
               >
                 <span
-                  className="relative z-10 inline-block transition-transform duration-200"
-                  style={{ transform: activeLink === href ? 'translateY(-2px)' : 'translateY(0)' }}
+                  className="relative z-10 inline-block"
+                  style={{
+                    transform: activeLink === href ? 'translateY(-3px) scale(1.08)' : 'translateY(0) scale(1)',
+                    transition: 'transform 0.25s cubic-bezier(.4,2,.6,1)'
+                  }}
                 >
                   {label}
                 </span>
-                <div className={`nav-underline ${transparent && !scrolled ? 'bg-white' : 'bg-primary-maroon'}`}></div>
+                <div
+                  className="absolute bottom-0 left-0 h-0.5 transition-all duration-300"
+                  style={{
+                    width: activeLink === href ? '100%' : '0%',
+                    background: activeLink === href ? `linear-gradient(90deg, ${navColors[idx].hover}, ${navColors[idx].glow})` : 'transparent',
+                    boxShadow: activeLink === href ? `0 0 8px ${navColors[idx].glow}` : 'none'
+                  }}
+                />
                 <span
-                  className="absolute bottom-0 left-1/2 w-1 h-1 bg-royal-gold rounded-full transition-all duration-300"
+                  className="absolute bottom-0 left-1/2 w-1.5 h-1.5 rounded-full transition-all duration-300"
                   style={{
                     opacity: activeLink === href ? 1 : 0,
-                    transform: activeLink === href ? 'translateX(-50%) scale(1)' : 'translateX(-50%) scale(0)'
+                    transform: activeLink === href ? 'translateX(-50%) scale(1)' : 'translateX(-50%) scale(0)',
+                    background: navColors[idx].hover,
+                    boxShadow: activeLink === href ? `0 0 10px ${navColors[idx].glow}` : 'none'
                   }}
                 />
               </Link>
