@@ -21,10 +21,10 @@ const HomePage = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
+    days: 30,
+    hours: 24,
+    minutes: 60,
+    seconds: 60
   });
   const [isInaugurationOver, setIsInaugurationOver] = useState(false);
 
