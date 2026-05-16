@@ -544,49 +544,118 @@ const InaugurationSpecial = () => {
       </section>
 
       {/* Terms & CTA */}
-      <section className="py-12 sm:py-16 bg-gradient-to-br from-royal-gold to-accent-gold">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-text-dark mb-6 sm:mb-8">
+      <section className="py-12 sm:py-16 relative overflow-hidden" style={{ animation: 'ctaBg 6s ease-in-out infinite' }}>
+        {/* Floating orbs */}
+        <div className="absolute top-0 left-0 w-48 h-48 rounded-full blur-3xl opacity-30 float-animation" style={{ background: 'linear-gradient(135deg,#f093fb,#f5576c)', animationDelay: '0s' }} />
+        <div className="absolute bottom-0 right-0 w-56 h-56 rounded-full blur-3xl opacity-25 float-animation" style={{ background: 'linear-gradient(135deg,#4facfe,#00f2fe)', animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-1/3 w-36 h-36 rounded-full blur-2xl opacity-20 float-animation" style={{ background: 'linear-gradient(135deg,#43e97b,#38f9d7)', animationDelay: '4s' }} />
+
+        {/* Sparkle dots */}
+        {[...Array(12)].map((_, i) => (
+          <div key={i} className="absolute w-2 h-2 rounded-full animate-ping"
+            style={{
+              background: ['#8B0000','#D69E2E','#38A169','#3182CE','#805AD5','#f7971e'][i % 6],
+              top: `${8 + i * 7.5}%`, left: `${5 + i * 8}%`,
+              animationDelay: `${i * 0.35}s`, animationDuration: '2.5s', opacity: 0.55
+            }}
+          />
+        ))}
+
+        {/* Floating stars */}
+        {[...Array(6)].map((_, i) => (
+          <div key={`s-${i}`} className="absolute opacity-30 pointer-events-none select-none"
+            style={{ top: `${10 + i * 15}%`, right: `${6 + i * 14}%`, animation: 'float 4s ease-in-out infinite', animationDelay: `${i * 0.6}s`, fontSize: ['16px','20px','14px'][i % 3] }}
+          >✨</div>
+        ))}
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
+          <h2
+            className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6"
+            style={{ animation: 'ctaHeading 0.8s ease both', background: 'linear-gradient(90deg,#8B0000,#D69E2E,#8B0000)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '200%', animationName: 'ctaHeading, shimmerText', animationDuration: '0.8s, 3s', animationTimingFunction: 'ease, linear', animationFillMode: 'both, none', animationIterationCount: '1, infinite' }}
+          >
             Don't Miss Out on These Amazing Deals!
           </h2>
-          <p className="text-lg sm:text-xl text-text-dark mb-8 sm:mb-12 max-w-3xl mx-auto">
-            Visit our store today and be part of our grand inauguration celebration
+
+          <p
+            className="text-lg sm:text-xl text-gray-700 font-medium mb-8 sm:mb-10 max-w-3xl mx-auto"
+            style={{ animation: 'fadeUp 0.9s ease both', animationDelay: '0.2s' }}
+          >
+            Visit our store today and be part of our{' '}
+            <span style={{ background: 'linear-gradient(90deg,#8B0000,#D69E2E)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 700 }}>grand inauguration celebration</span>
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-8 sm:mb-12">
-            <Link href="/contact" className="btn-primary text-lg sm:text-xl px-8 sm:px-12 py-3 sm:py-5">
-              Visit Store Now
-            </Link>
-            <a 
-              href="tel:9588253490"
-              className="bg-white text-text-dark border-2 border-text-dark hover:bg-text-dark hover:text-white transition-all text-lg sm:text-xl px-8 sm:px-12 py-3 sm:py-5 rounded-xl font-bold"
+
+          <div
+            className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-8 sm:mb-10"
+            style={{ animation: 'fadeUp 0.9s ease both', animationDelay: '0.35s' }}
+          >
+            <Link
+              href="/contact"
+              className="relative overflow-hidden group px-10 py-4 rounded-xl font-bold text-lg sm:text-xl text-white transition-all duration-300"
+              style={{ background: 'linear-gradient(135deg,#8B0000,#5C0000)', boxShadow: '0 6px 20px rgba(139,0,0,0.4)' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(139,0,0,0.5)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 6px 20px rgba(139,0,0,0.4)'; }}
             >
-              Call: 9588253490
+              <span className="relative z-10">🏪 Visit Store Now</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
+            </Link>
+            <a
+              href="tel:9588253490"
+              className="relative overflow-hidden group px-10 py-4 rounded-xl font-bold text-lg sm:text-xl transition-all duration-300"
+              style={{ background: 'white', color: '#1a1a1a', border: '2px solid #1a1a1a', boxShadow: '0 6px 20px rgba(0,0,0,0.15)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'linear-gradient(135deg,#f7971e,#ffd200)'; e.currentTarget.style.border = '2px solid transparent'; e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(255,210,0,0.5)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.border = '2px solid #1a1a1a'; e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.15)'; }}
+            >
+              <span className="relative z-10">📞 Call: 9588253490</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
             </a>
           </div>
-          
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 max-w-4xl mx-auto border border-white/20">
-            <h3 className="text-lg sm:text-xl font-bold text-text-dark mb-4 sm:mb-6">Important Terms:</h3>
-            <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 text-text-dark text-left text-sm sm:text-base">
-              <div className="flex items-start gap-2 sm:gap-3">
-                <Star className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" />
-                <span>All offers valid only on 1st February 2024</span>
-              </div>
-              <div className="flex items-start gap-2 sm:gap-3">
-                <Star className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" />
-                <span>Combo offers auto-applied when conditions met</span>
-              </div>
-              <div className="flex items-start gap-2 sm:gap-3">
-                <Star className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" />
-                <span>Flash deals subject to stock availability</span>
-              </div>
-              <div className="flex items-start gap-2 sm:gap-3">
-                <Star className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" />
-                <span>Free delivery within city limits</span>
-              </div>
+
+          <div
+            className="bg-white/60 backdrop-blur-md rounded-2xl p-5 sm:p-7 max-w-4xl mx-auto border border-white/80 shadow-xl"
+            style={{ animation: 'fadeUp 0.9s ease both', animationDelay: '0.5s' }}
+          >
+            <h3
+              className="text-lg sm:text-xl font-bold mb-5 text-gray-900"
+              style={{ background: 'linear-gradient(90deg,#8B0000,#D69E2E)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            >
+              ⚠️ Important Terms:
+            </h3>
+            <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 text-left">
+              {[
+                { text: 'All offers valid only on 1st February 2024', color: '#E53E3E' },
+                { text: 'Combo offers auto-applied when conditions met', color: '#D69E2E' },
+                { text: 'Flash deals subject to stock availability', color: '#38A169' },
+                { text: 'Free delivery within city limits', color: '#3182CE' },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 p-3 rounded-xl transition-all duration-300 cursor-default"
+                  style={{ animation: 'fadeUp 0.5s ease both', animationDelay: `${0.55 + i * 0.1}s` }}
+                  onMouseEnter={e => { e.currentTarget.style.background = `${item.color}15`; e.currentTarget.style.transform = 'translateX(6px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = ''; e.currentTarget.style.transform = ''; }}
+                >
+                  <Star className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: item.color }} />
+                  <span className="text-gray-800 font-medium text-sm sm:text-base">{item.text}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
+
+        <style>{`
+          @keyframes ctaBg {
+            0%   { background: linear-gradient(135deg,#fef9f0,#fff8e1,#fffef7); }
+            20%  { background: linear-gradient(135deg,#f0fff4,#e6ffed,#f5fff8); }
+            40%  { background: linear-gradient(135deg,#f0f4ff,#e8f0ff,#f5f8ff); }
+            60%  { background: linear-gradient(135deg,#fff0f5,#ffe4f0,#fff5fb); }
+            80%  { background: linear-gradient(135deg,#fdf0ff,#f5e6ff,#faf0ff); }
+            100% { background: linear-gradient(135deg,#fef9f0,#fff8e1,#fffef7); }
+          }
+          @keyframes ctaHeading {
+            from { opacity:0; transform:translateY(-25px) scale(0.95); }
+            to   { opacity:1; transform:translateY(0) scale(1); }
+          }
+        `}</style>
       </section>
       
       <Footer />
